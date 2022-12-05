@@ -1,8 +1,8 @@
 # <Project Name> by PapaAJsMusselSoup
-Anna Fang: role
-James Yu: role
-May Qiu: role
-Russell Goychayev: project manager
+Anna Fang: Flask/Python & Database  
+James Yu: HTML/CSS  
+May Qiu: HTML/CSS  
+Russell Goychayev: project manager &  Flask/Python & Database  
 
 ### Description of website/app
 This app is an app that is an app. 
