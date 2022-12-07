@@ -38,4 +38,15 @@ AnnaF, JamesY, MayQ, RussellG -- 2022-12-05 21:00
 - Task Breakdown
 --------------------------------------------------------------
 
+JamesY, MayQ, RussellG -- 2022-12-06 20:00
+--------------------------------------------------------------
+fdbk: Make a better database organization, a few minor things, navbar
+
+DD revisions:
+- Added navbar to component list
+- Added python files to component list
+- Used google docs' tables feature to organize our database
+- Added links to kb cards
+
+--------------------------------------------------------------
 ==============================================================
