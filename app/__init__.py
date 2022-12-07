@@ -14,6 +14,11 @@ c.execute(command)
 def login():
 	return render_template('abc.html')
 
+@app.route('/register', methods = ['GET', 'POST'])
+def register():
+	return "a"
+
+
 if __name__ == '__main__':
 	app.debug = True
 	app.run()
