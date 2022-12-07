@@ -10,9 +10,9 @@ c = db.cursor()               #facilitate db ops -- you will use cursor to trigg
 command = ""
 c.execute(command) 
 
-@app.route('/', methods = ['GET'])
+@app.route('/', methods = ['GET', 'POST'])
 def login():
-	return "a"
+	return render_template('abc.html')
 
 if __name__ == '__main__':
 	app.debug = True
