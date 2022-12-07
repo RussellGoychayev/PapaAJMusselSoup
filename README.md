@@ -17,4 +17,5 @@ https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_FoodAPI.m
 ### Launch Codes
 1) Clone this repo
 2) Create and activate a virtual environment
-3) Run the __init__.py file found in ```app/```
+3) Run the __init__.py file found in ```app/``` [python3 ../__init__.py] 
+4) Navigate to the site located at `http://127.0.0.1:5000` 
