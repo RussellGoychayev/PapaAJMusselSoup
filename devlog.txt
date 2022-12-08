@@ -38,7 +38,7 @@ AnnaF, JamesY, MayQ, RussellG -- 2022-12-05 21:00
 - Task Breakdown
 --------------------------------------------------------------
 
-JamesY, MayQ, RussellG -- 2022-12-06 20:00
+AnnaF, JamesY, MayQ, RussellG -- 2022-12-06 20:00
 --------------------------------------------------------------
 fdbk: Make a better database organization, a few minor things, navbar
 
@@ -50,9 +50,25 @@ DD revisions:
 
 --------------------------------------------------------------
 
-JamesY, MayQ, RussellG -- 2022-12-07 12:00
+AnnaF, JamesY, MayQ, RussellG -- 2022-12-07 12:00
 --------------------------------------------------------------
 Finished deliverables for thursday:
-
+- requirements.txt
+- Launch codes
+- Summary
+- Working app
 --------------------------------------------------------------
+
+JamesY -- 2022-12-07 18:00
+--------------------------------------------------------------
+- Login page html
+--------------------------------------------------------------
+
+JamesY, MayQ, RussellG, AnnaF -- 2022-12-08 13:13
+--------------------------------------------------------------
+- Tested out the three apis
+- The open food facts api was too complicated
+- We plan to replace the api with the love calculator or the translator
+--------------------------------------------------------------
+
 ==============================================================
