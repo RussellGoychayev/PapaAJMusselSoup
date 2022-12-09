@@ -26,11 +26,7 @@ def register():
 
 @app.route('/landing page', methods = ['GET', 'POST'])
 def landing(): 
-<<<<<<< HEAD
 	return render_template('landing.html')
-=======
-	return "b" 
->>>>>>> a90affe7fd9cdad85ee597ec997097da920323f8
 	#render template here
 
 # OUTLINE FOR WEB FRAME
