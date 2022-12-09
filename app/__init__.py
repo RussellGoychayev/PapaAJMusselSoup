@@ -20,11 +20,11 @@ def login():
 	url2 = "https://api.spoonacular.com/recipes/716429/information?apiKey=7081bf709f0d44b7984587105086357f"
 	res2 = requests.get(url2)
 	a = res2.json()['summary']
-	return render_template('abc.html', s=a)
+	return render_template('login.html', s=a)
 
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
-	return "a"
+	return render_template('register.html')
 
 
 if __name__ == '__main__':
