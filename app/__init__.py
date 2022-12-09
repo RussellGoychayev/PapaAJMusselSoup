@@ -17,6 +17,11 @@ def login():
 	url2 = "https://api.spoonacular.com/recipes/716429/information?apiKey=7081bf709f0d44b7984587105086357f"
 	res2 = requests.get(url2)
 	a = res2.json()['summary']
+
+	url3 = 'https://api.mymemory.translated.net/get?' #url of API
+	res3 = requests.get(url, params={'q':'Hello', 'langpair':'en|es'}) #q is the source text you want to translate. langpair is <source language>|<target language>
+	print(res3.json())
+	#print(res3.json()['responseData']['translatedText']) #prints the Spanish translation of 'Hello'
 	return render_template('login.html', s=a)
 
 @app.route('/register', methods = ['GET', 'POST'])
