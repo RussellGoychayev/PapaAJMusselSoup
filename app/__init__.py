@@ -19,9 +19,9 @@ def login():
 	a = res2.json()['summary']
 
 	url3 = 'https://api.mymemory.translated.net/get?' #url of API
-	res3 = requests.get(url, params={'q':'Hello', 'langpair':'en|es'}) #q is the source text you want to translate. langpair is <source language>|<target language>
-	print(res3.json())
-	#print(res3.json()['responseData']['translatedText']) #prints the Spanish translation of 'Hello'
+	res3 = requests.get(url3, params={'q':'Hello', 'langpair':'en|es'}) #q is the source text you want to translate. langpair is <source language>|<target language>
+	#print(res3.json())
+	print(res3.json()['responseData']['translatedText']) #prints the Spanish translation of 'Hello'
 	return render_template('login.html', s=a)
 
 @app.route('/register', methods = ['GET', 'POST'])
