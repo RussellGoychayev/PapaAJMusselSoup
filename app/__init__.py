@@ -1,15 +1,12 @@
 
-from flask import Flask, render_template, session, request
+from flask import Flask, render_template, session, request, redirect 
 import sqlite3
 import requests
+import utl.database as dataFrame 
 
 app = Flask(__name__)
-
-DB_FILE="data.db"
-db = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
-c = db.cursor()               #facilitate db ops -- you will use cursor to trigger db events
-command = ""
-c.execute(command) 
+# initiate tables 
+dataFrame.createSession 
 
 @app.route('/', methods = ['GET', 'POST'])
 def login():
@@ -23,9 +20,33 @@ def login():
 	return render_template('abc.html', s=a)
 
 @app.route('/register', methods = ['GET', 'POST'])
-def register():
+def register(): 
 	return "a"
+	#render template here
 
+@app.route('/landing page', methods = ['GET', 'POST'])
+def landing(): 
+	return "b" 
+	#render template here
+
+# OUTLINE FOR WEB FRAME
+#  @app.route('/friends', methods = ['GET', 'POST'])
+# def friendpage(): 
+# 	#render template here
+
+# @app.route('/explore', methods = ['GET', 'POST'])
+# def explorepage(): 
+# 	#render template here
+
+# @app.route('/leaderboard', methods = ['GET', 'POST'])
+# def viewLeader(): 
+# 	#render template here
+
+@app.route('/logout') 
+def logout(): 
+	session.pop("username")
+	session.pop("password")
+	return redirect("/")
 
 if __name__ == '__main__':
 	app.debug = True
