@@ -26,6 +26,12 @@ def login():
 def register():
 	return render_template('register.html')
 
+@app.route('/home', methods = ['GET', 'POST'])
+def home():
+	return render_template('navbar.html')
+
+
+
 
 if __name__ == '__main__':
 	app.debug = True
