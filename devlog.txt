@@ -76,4 +76,10 @@ JamesY -- 2022-12-08 18:22
 - Finished login and register page html
 --------------------------------------------------------------
 
+AnnaF -- 2022-12-08  21:45
+--------------------------------------------------------------
+- worked on database (login and registration) and laid out basic framework for python file organization 
+- fixed merge conflict (D:)
+--------------------------------------------------------------
+
 ==============================================================
