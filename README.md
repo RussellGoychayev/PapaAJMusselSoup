@@ -12,7 +12,7 @@ Our stretch goals are some form of recommending friends based on their recipe ta
 ### API card links
 https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_open-food-facts.md  
 https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_recipies.md  
-https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_FoodAPI.md  l
+https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_FoodAPI.md  
 
 ### Launch Codes
 1) Navigate to the folder where you wish to store the repository using `cd`. 
@@ -21,3 +21,13 @@ https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_FoodAPI.m
 5) Install all required elements found in requirements.tx using the `pip install -r ../requirements.txt` command.  
 4) Run the __init__.py file found in ```app/``` through the `python3 ../__init__.py` command. 
 5) Navigate to the site located at `http://127.0.0.1:5000`. 
+
+### TO DO LIST 
+1) finish finding replacement API and figuring out how to use it 
+2) finish setting up databases (user_info and the food one) and link to py
+    - login info (user and password)
+    - favorites 
+    - friend requests 
+3) html templates
+4) CSS to make things pretty! 
+    - separate file from the HTML files
