@@ -35,12 +35,14 @@ def landing():
 	#render template here
 
 # OUTLINE FOR WEB FRAME
-#  @app.route('/friends', methods = ['GET', 'POST'])
-# def friendpage(): 
+@app.route('/friends', methods = ['GET', 'POST'])
+def friendpage(): 
+	return render_template('friends.html')
 # 	#render template here
 
-# @app.route('/explore', methods = ['GET', 'POST'])
-# def explorepage(): 
+@app.route('/explore', methods = ['GET', 'POST'])
+def explorepage():
+	return render_template('explore.html') 
 # 	#render template here
 
 # @app.route('/leaderboard', methods = ['GET', 'POST'])
