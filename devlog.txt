@@ -89,7 +89,7 @@ RussellG -- 2022-12-11  19:00
 - to do: rework design doc a little and make the routes more clear? idk
 --------------------------------------------------------------
 
-RussellG -- 2022-12-11  19:00
+MayQ -- 2022-12-11  22:31
 --------------------------------------------------------------
 - made all the buttons go where they were supposed to be linked to. fixed some bugs.
 - added a pop up for incorrect pswd but don't know how to make the actual popup dissappear :/
