@@ -115,10 +115,18 @@ def register_helper():
 	print("register helper: success")
 	return redirect("/login")
 
-# This route is the landing page. It will allow you to travel to the login, singup, leaderboards, friends,
-# and other routes.
+# This route  is the index. It checks if user is in session. If yes, they are brought to home. If not, they are brought to login.
 @app.route('/', methods = ['GET', 'POST'])
-def landing(): 
+def index(): 
+	if 'username' in session:
+		return redirect("/home")
+	return render_template('/login.html')
+	#render template here
+
+# This route is the home page. It will allow you to travel to the login, singup, leaderboards, friends,
+# and other routes.
+@app.route('/home', methods = ['GET', 'POST'])
+def home(): 
 	return render_template('landing.html')
 	#render template here
 
@@ -130,6 +138,9 @@ def friendpage():
 
 @app.route('/explore', methods = ['GET', 'POST'])
 def explorepage():
+	url =  "https://api.edamam.com/api/recipes/v2"
+	res = requests.get(url, params={'type':'public', 'app_id':"904296dd", 'app_key':"58228c816ae6f1c88cca02d85c4da325", 'q': 'chicken'})
+	#(res.json()['hits'][0]['recipe']['label'])
 	return render_template('explore.html') 
 # 	#render template here
 
@@ -140,8 +151,8 @@ def explorepage():
 @app.route('/logout') 
 def logout(): 
 	session.pop("username")
-	session.pop("password")
-	return redirect("/")
+	#session.pop("password")
+	return redirect("/login")
 
 if __name__ == '__main__':
 	app.debug = True
