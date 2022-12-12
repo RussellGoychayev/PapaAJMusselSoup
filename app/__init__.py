@@ -3,6 +3,8 @@ from flask import Flask, render_template, session, request, redirect
 import sqlite3
 import requests
 import utl.database as dataFrame 
+#from api import *
+
 app = Flask(__name__)
 
 app.secret_key = "abc123";#Q: what is the app secret key?
@@ -31,7 +33,7 @@ def login():
 	
 	url2 = "https://api.spoonacular.com/recipes/716429/information?apiKey=7081bf709f0d44b7984587105086357f"
 	res2 = requests.get(url2)
-	recipies_api_summary = res2.json()['summary']
+	recipes_api_summary = res2.json()['summary']
 
 	url3 = 'https://api.mymemory.translated.net/get?' #url of API
 	res3 = requests.get(url3, params={'q':'Hello', 'langpair':'en|es'}) #q is the source text you want to translate. langpair is <source language>|<target language>
@@ -147,6 +149,10 @@ def explorepage():
 # @app.route('/leaderboard', methods = ['GET', 'POST'])
 # def viewLeader(): 
 # 	#render template here
+
+@app.route('/search', methods = ['GET', 'POST'])
+def search():
+	return render_template('search.html')
 
 @app.route('/logout') 
 def logout(): 
