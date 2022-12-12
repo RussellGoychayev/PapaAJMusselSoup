@@ -82,4 +82,11 @@ AnnaF -- 2022-12-08  21:45
 - fixed merge conflict (D:)
 --------------------------------------------------------------
 
+RussellG -- 2022-12-11  19:00
+--------------------------------------------------------------
+- finished user sessions. its kind of scuffed though. only gives error messages in terminal and not on website. 
+- added two routes ("register_helper" and "login_helper")
+- to do: rework design doc a little and make the routes more clear? idk
+--------------------------------------------------------------
+
 ==============================================================
