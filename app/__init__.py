@@ -69,7 +69,7 @@ def login_helper():
 				return redirect("/")
 				print("login_helper: logged u in")
 			else:
-				return redirect("/login")
+				return render_template("login.html", error_message ="Incorrect Password")
 				print("login_helper: wrong password")
 	print("login_helper: wrong username and/or password, sending u to /login")
 	return redirect("/login")
