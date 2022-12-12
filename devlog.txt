@@ -89,4 +89,10 @@ RussellG -- 2022-12-11  19:00
 - to do: rework design doc a little and make the routes more clear? idk
 --------------------------------------------------------------
 
+RussellG -- 2022-12-11  19:00
+--------------------------------------------------------------
+- made all the buttons go where they were supposed to be linked to. fixed some bugs.
+- added a pop up for incorrect pswd but don't know how to make the actual popup dissappear :/
+- to do: fix popup, fill explore page with recipes.
+--------------------------------------------------------------
 ==============================================================
