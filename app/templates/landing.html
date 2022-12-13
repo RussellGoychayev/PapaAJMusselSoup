@@ -13,7 +13,7 @@
         <ul class="navbar-nav mr-auto">
 
           <li class="nav-item">
-            <a class="nav-link" style="font-size: 20px; font-weight: 850;" href="#">Home</a>
+            <a class="nav-link" style="font-size: 20px; font-weight: 850;" href="/home">Home</a>
           </li>
 
         <li class="nav-item">
@@ -27,9 +27,9 @@
         </ul>
         
     </div>
-    <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-primary" type="submit">Search</button>
+    <form action="/search" method="POST" class="d-flex">
+        <input class="form-control me-2" type="text" name="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-primary" type="submit" name="search">Search</button>
       </form>
 
       <form action="/logout">

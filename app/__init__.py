@@ -27,9 +27,9 @@ c.execute("CREATE TABLE IF NOT EXISTS pages(story_id int, title text, content te
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
-	url =  "https://api.edamam.com/api/recipes/v2"
-	res = requests.get(url, params={'type':'public', 'app_id':"904296dd", 'app_key':"58228c816ae6f1c88cca02d85c4da325", 'q': 'chicken'})
-	print(res.json()['hits'][0]['recipe']['label']) # prints the name of the first chicken recipe 
+	#url =  "https://api.edamam.com/api/recipes/v2"
+	#res = requests.get(url, params={'type':'public', 'app_id':"904296dd", 'app_key':"58228c816ae6f1c88cca02d85c4da325", 'q': 'chicken'})
+	#print(res.json()['hits'][0]['recipe']['label']) # prints the name of the first chicken recipe 
 	
 	url2 = "https://api.spoonacular.com/recipes/716429/information?apiKey=7081bf709f0d44b7984587105086357f"
 	#res2 = requests.get(url2)
@@ -140,8 +140,8 @@ def friendpage():
 
 @app.route('/explore', methods = ['GET', 'POST'])
 def explorepage():
-	url =  "https://api.edamam.com/api/recipes/v2"
-	res = requests.get(url, params={'type':'public', 'app_id':"904296dd", 'app_key':"58228c816ae6f1c88cca02d85c4da325", 'q': 'chicken'})
+	#url =  "https://api.edamam.com/api/recipes/v2"
+	#res = requests.get(url, params={'type':'public', 'app_id':"904296dd", 'app_key':"58228c816ae6f1c88cca02d85c4da325", 'q': 'chicken'})
 	#(res.json()['hits'][0]['recipe']['label'])
 	return render_template('explore.html') 
 # 	#render template here
@@ -152,42 +152,45 @@ def explorepage():
 
 @app.route('/search', methods = ['GET', 'POST'])
 def search():
-	print(request.form['search'])
-	results = search_recipe(request.form['search'], 0, 10)
-	return render_template('search.html', r=results)
+	try:
+		#print(request.form['search'])
+		results = search_recipe(request.form['search'], 0, 12)
+		return render_template('search.html', r=results, s=request.form['search'])
+	except:
+		return render_template('search.html', error="No results found 😭")
 
 @app.route('/<name>', methods = ['GET', 'POST'])
 def results(name):
 	k = get_key('keys/key_edamam.txt')
 	url =  "https://api.edamam.com/api/recipes/v2"
 	res = requests.get(url, params={'type':'public', 'app_id':"904296dd", 'app_key':k, 'q': name})
-	print(res.json()['hits'][0]['recipe'].keys())
+	#print(res.json()['hits'][0]['recipe'].keys())
 	c = int(res.json()['hits'][0]['recipe']['calories'])
-	print(c)
+	#print(c)
 	i = res.json()['hits'][0]['recipe']['image'] # picture of food
-	print(i)
+	#print(i)
 	u = res.json()['hits'][0]['recipe']['url'] #source url
-	print(u)
+	#print(u)
 	ct = res.json()['hits'][0]['recipe']['cuisineType'] #type of cuisine (American, South American...)
-	print(ct)
+	#print(ct)
 	ing = res.json()['hits'][0]['recipe']['ingredientLines'] #list of ingredients
-	print(ing)
+	#print(ing)
 	d = res.json()['hits'][0]['recipe']['digest'] #nutrition
 	#print(d)
 	f = int(res.json()['hits'][0]['recipe']['digest'][0]['total']) #fat content
-	print(f)
+	#print(f)
 	carb = int(res.json()['hits'][0]['recipe']['digest'][1]['total']) #carb content
-	print(carb)
+	#print(carb)
 	p = int(res.json()['hits'][0]['recipe']['digest'][2]['total']) #protein content
-	print(p)
+	#print(p)
 	chol = int(res.json()['hits'][0]['recipe']['digest'][3]['total']) #cholesterol content
-	print(chol)
+	#print(chol)
 	sod = int(res.json()['hits'][0]['recipe']['digest'][4]['total']) #sodium content
-	print(sod)
-	cal = int(res.json()['hits'][0]['recipe']['digest'][5]['total']) #calcium content
-	print(cal)
-	#return res.json()['hits'][0]['recipe']['digest']
-	return render_template("results.html", n=name,i=i)
+	#print(sod)
+	y = int(res.json()['hits'][0]['recipe']['yield']) #number of servings
+	#print(y)
+	#return res.json()['hits'][0]['recipe']
+	return render_template("results.html", n=name, c=c, i=i, ct=ct[0], ing=', '.join(ing), f=f, carb=carb, p=p, chol=chol, y=y, sod=sod, u=u)
 
 
 @app.route('/logout') 
