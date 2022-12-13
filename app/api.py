@@ -36,5 +36,5 @@ def search_recipe(query, l, u): #searches using query as a keyword and returns r
         l = l+1
     return results
 
-print(search_recipe("chicken", 0, 10))
+#print(search_recipe("chicken", 0, 10))
 #print(get_title())

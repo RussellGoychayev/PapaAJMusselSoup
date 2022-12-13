@@ -22,7 +22,7 @@
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" style="font-size: 20px; font-weight: 850;" href="#">Friends</a>
+            <a class="nav-link" style="font-size: 20px;" href="#">Friends</a>
           </li>
 
         </ul>
@@ -39,12 +39,9 @@
     </div>
   </nav>
 
-  {% for name in r %}
-        {{name}} 
+  {% for name in r %}  <!-- loop to display the search results-->
         <form method="POST" action="/results">
-            <button name="name" value="{{name}}">
-                Visit
-            </button>
+            <a href="/{{name}}">{{name}}</a> <!-- hyperlink that passes the name variable to the flask app-->
             <br>
         </form>
     {% endfor %}

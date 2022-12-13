@@ -152,14 +152,17 @@ def explorepage():
 
 @app.route('/search', methods = ['GET', 'POST'])
 def search():
-	print(request.args['search2'])
-	results = search_recipe("chicken", 0, 10)
-	
+	print(request.form['search'])
+	results = search_recipe(request.form['search'], 0, 10)
 	return render_template('search.html', r=results)
 
-@app.route('/results', methods = ['GET', 'POST'])
-def results():
-	return "a"
+@app.route('/<name>', methods = ['GET', 'POST'])
+def results(name):
+	k = get_key('keys/key_edamam.txt')
+	url =  "https://api.edamam.com/api/recipes/v2"
+	res = requests.get(url, params={'type':'public', 'app_id':"904296dd", 'app_key':k, 'q': name})
+	print(res.json()['hits'][0]['recipe'].keys())
+	return render_template(results.html )
 
 
 @app.route('/logout') 
