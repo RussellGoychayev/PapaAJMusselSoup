@@ -37,15 +37,26 @@ def search_recipe(query, l, u): #searches using query as a keyword and returns r
     return results 
     
 # populate list with randomly generated urls [title, image, and sourceUrl]
-def makeList():
-    recipeList = []
-    for x in range(100):
-        k = get_key('keys/key_spoonacular.txt')
-        url =  "https://api.spoonacular.com/api/recipes/random"
-        res = requests.get(url, params={'type':'public', 'app_id':"904296dd", 'app_key':k})
-        recipeList.append(res.json()['title'])
-        recipeList.append(res.json()['image'])
-        recipeList.append(res.json()['sourceUrl'])
-    return recipeList
+def makeList(i):
+    recipeTitle = []
+    recipeImage = []
+    recipeUrl = []
+    info = []
+    k = get_key('keys/key_spoonacular.txt')
+    for x in range(i):
+        url =  f"https://api.spoonacular.com/recipes/random?number=1&apiKey={k}"
+        res = requests.get(url)
+        recipeTitle.append(res.json()['recipes'][0]['title'])
+        recipeImage.append(res.json()['recipes'][0]['image'])
+        recipeUrl.append(res.json()['recipes'][0]['spoonacularSourceUrl'])
+    #print (res.json()['title'])
+    #recipeImage.append(res.json()['image'])
+    #recipeUrl.append(res.json()['sourceUrl'])
+    info.append(recipeTitle)
+    info.append(recipeImage)
+    info.append(recipeUrl)
+    return info
 
-#print(makeList())
+    
+
+print(makeList(5))
