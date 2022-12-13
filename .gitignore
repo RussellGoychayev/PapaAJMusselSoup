@@ -130,6 +130,4 @@ ehthumbs.db
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #ignore keys
-app/keys/key_edamam.txt
-app/keys/MyMemory.txt
-app/keys/spoonacular.txt
+app/keys/
