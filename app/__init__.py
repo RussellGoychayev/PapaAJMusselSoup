@@ -162,7 +162,20 @@ def results(name):
 	url =  "https://api.edamam.com/api/recipes/v2"
 	res = requests.get(url, params={'type':'public', 'app_id':"904296dd", 'app_key':k, 'q': name})
 	print(res.json()['hits'][0]['recipe'].keys())
-	return render_template(results.html )
+	c = int(res.json()['hits'][0]['recipe']['calories'])
+	print(c)
+	i = res.json()['hits'][0]['recipe']['image']
+	print(i)
+	u = res.json()['hits'][0]['recipe']['url']
+	print(u)
+	ct = res.json()['hits'][0]['recipe']['cuisineType']
+	print(ct)
+	ing = res.json()['hits'][0]['recipe']['ingredientLines']
+	print(ing)
+	d = res.json()['hits'][0]['recipe']['digest']
+	print(d)
+	return res.json()['hits'][0]['recipe']['digest'][0]
+	#return render_template("results.html")
 
 
 @app.route('/logout') 
