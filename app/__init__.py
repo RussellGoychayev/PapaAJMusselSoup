@@ -3,7 +3,7 @@ from flask import Flask, render_template, session, request, redirect
 import sqlite3
 import requests
 import utl.database as dataFrame 
-#from api import *
+from api import *
 
 app = Flask(__name__)
 
@@ -29,11 +29,11 @@ c.execute("CREATE TABLE IF NOT EXISTS pages(story_id int, title text, content te
 def login():
 	url =  "https://api.edamam.com/api/recipes/v2"
 	res = requests.get(url, params={'type':'public', 'app_id':"904296dd", 'app_key':"58228c816ae6f1c88cca02d85c4da325", 'q': 'chicken'})
-	# print(res.json()['hits'][0]['recipe']['label']) # prints the name of the first chicken recipe 
+	print(res.json()['hits'][0]['recipe']['label']) # prints the name of the first chicken recipe 
 	
 	url2 = "https://api.spoonacular.com/recipes/716429/information?apiKey=7081bf709f0d44b7984587105086357f"
-	res2 = requests.get(url2)
-	recipes_api_summary = res2.json()['summary']
+	#res2 = requests.get(url2)
+	#recipes_api_summary = res2.json()['summary']
 
 	url3 = 'https://api.mymemory.translated.net/get?' #url of API
 	res3 = requests.get(url3, params={'q':'Hello', 'langpair':'en|es'}) #q is the source text you want to translate. langpair is <source language>|<target language>
@@ -152,7 +152,15 @@ def explorepage():
 
 @app.route('/search', methods = ['GET', 'POST'])
 def search():
-	return render_template('search.html')
+	print(request.args['search2'])
+	results = search_recipe("chicken", 0, 10)
+	
+	return render_template('search.html', r=results)
+
+@app.route('/results', methods = ['GET', 'POST'])
+def results():
+	return "a"
+
 
 @app.route('/logout') 
 def logout(): 

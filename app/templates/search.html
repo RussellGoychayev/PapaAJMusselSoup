@@ -39,4 +39,14 @@
     </div>
   </nav>
 
+  {% for name in r %}
+        {{name}} 
+        <form method="POST" action="/results">
+            <button name="name" value="{{name}}">
+                Visit
+            </button>
+            <br>
+        </form>
+    {% endfor %}
+
 </html>
