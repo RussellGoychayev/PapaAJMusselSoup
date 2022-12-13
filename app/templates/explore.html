@@ -37,6 +37,13 @@
       </form>
     </div>
   </nav>
+  {% for recipes in r %}  <!-- loop to display the search results-->
+        <form method="POST" action="/results">
+            get_url()
+            <a href="/{{name}}">{{name}}</a> <!-- hyperlink that passes the name variable to the flask app-->
+            <br>
+        </form>
+    {% endfor %}
 
   
 </html>
