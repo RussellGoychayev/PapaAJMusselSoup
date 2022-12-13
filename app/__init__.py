@@ -164,17 +164,18 @@ def results(name):
 	print(res.json()['hits'][0]['recipe'].keys())
 	c = int(res.json()['hits'][0]['recipe']['calories'])
 	print(c)
-	i = res.json()['hits'][0]['recipe']['image']
+	i = res.json()['hits'][0]['recipe']['image'] # picture of food
 	print(i)
-	u = res.json()['hits'][0]['recipe']['url']
+	u = res.json()['hits'][0]['recipe']['url'] #source url
 	print(u)
-	ct = res.json()['hits'][0]['recipe']['cuisineType']
+	ct = res.json()['hits'][0]['recipe']['cuisineType'] #type of cuisine (American, South American...)
 	print(ct)
-	ing = res.json()['hits'][0]['recipe']['ingredientLines']
+	ing = res.json()['hits'][0]['recipe']['ingredientLines'] #list of ingredients
 	print(ing)
-	d = res.json()['hits'][0]['recipe']['digest']
+	d = res.json()['hits'][0]['recipe']['digest'] #nutrition
 	print(d)
-	return res.json()['hits'][0]['recipe']['digest'][0]
+	f = int(res.json()['hits'][0]['recipe']['digest'][0]['total']) #fat content
+	return res.json()['hits'][0]['recipe']['digest']
 	#return render_template("results.html")
 
 
