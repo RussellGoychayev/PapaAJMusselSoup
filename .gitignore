@@ -129,3 +129,7 @@ ehthumbs.db
 **/*[\\/\:;*?!'"<>|$º•¶§∞¢£]*
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#ignore keys
+app/keys/key_edamam.txt
+app/keys/MyMemory.txt
+app/keys/spoonacular.txt
