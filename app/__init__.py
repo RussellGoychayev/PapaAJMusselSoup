@@ -173,10 +173,21 @@ def results(name):
 	ing = res.json()['hits'][0]['recipe']['ingredientLines'] #list of ingredients
 	print(ing)
 	d = res.json()['hits'][0]['recipe']['digest'] #nutrition
-	print(d)
+	#print(d)
 	f = int(res.json()['hits'][0]['recipe']['digest'][0]['total']) #fat content
-	return res.json()['hits'][0]['recipe']['digest']
-	#return render_template("results.html")
+	print(f)
+	carb = int(res.json()['hits'][0]['recipe']['digest'][1]['total']) #carb content
+	print(carb)
+	p = int(res.json()['hits'][0]['recipe']['digest'][2]['total']) #protein content
+	print(p)
+	chol = int(res.json()['hits'][0]['recipe']['digest'][3]['total']) #cholesterol content
+	print(chol)
+	sod = int(res.json()['hits'][0]['recipe']['digest'][4]['total']) #sodium content
+	print(sod)
+	cal = int(res.json()['hits'][0]['recipe']['digest'][5]['total']) #calcium content
+	print(cal)
+	#return res.json()['hits'][0]['recipe']['digest']
+	return render_template("results.html", n=name,i=i)
 
 
 @app.route('/logout') 
