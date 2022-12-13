@@ -95,4 +95,11 @@ MayQ -- 2022-12-11  22:31
 - added a pop up for incorrect pswd but don't know how to make the actual popup dissappear :/
 - to do: fix popup, fill explore page with recipes.
 --------------------------------------------------------------
+
+AnnaF, JamesY, MayQ -- 2022-12-12  13:13
+--------------------------------------------------------------
+- removed html popup 
+- fixed issue with dropping tables
+- working on getting info from apis onto explore page
+--------------------------------------------------------------
 ==============================================================
