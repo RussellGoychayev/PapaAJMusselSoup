@@ -140,9 +140,10 @@ def friendpage():
 
 @app.route('/explore', methods = ['GET', 'POST'])
 def explorepage():
-	url =  "https://api.edamam.com/api/recipes/v2"
-	res = requests.get(url, params={'type':'public', 'app_id':"904296dd", 'app_key':"58228c816ae6f1c88cca02d85c4da325", 'q': 'chicken'})
-	#(res.json()['hits'][0]['recipe']['label'])
+	info = makeList(5)
+	title = info[0]
+	image = info[1]
+	url = info[2]
 	return render_template('explore.html') 
 # 	#render template here
 
