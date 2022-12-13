@@ -102,4 +102,10 @@ AnnaF, JamesY, MayQ -- 2022-12-12  13:13
 - fixed issue with dropping tables
 - working on getting info from apis onto explore page
 --------------------------------------------------------------
+
+AnnaF, JamesY, MayQ, RussellG -- 2022-12-04 22:14
+--------------------------------------------------------------
+had an issue with the file not found (still not fixed)
+started (trying) populating explore page with recipes by populating the list
+--------------------------------------------------------------
 ==============================================================
