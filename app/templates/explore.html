@@ -38,13 +38,25 @@
     </div>
   </nav>
 
-  {% for recipes in r %}  <!-- loop to display the search results-->
-        <form method="POST" action="/results">
-            get_url()
-            <a href="/{{name}}">{{name}}</a> <!-- hyperlink that passes the name variable to the flask app-->
-            <br>
-        </form>
-    {% endfor %}
+  <h1>{{error}}</h1>
 
+  <div class="container-fluid">
+    <div class="row"> <!-- header for explore page-->
+      <div class="col-sm"><h1> Discover new recipes! </h1></div>
+    </div>
+  {% for t,im,u,s in i %}  <!-- i is a list containing the title, image, url of the recipe-->
+  <div class="row">
+      <div class="col-sm">
+        <form method="POST" action="/results">
+        <a href="{{u}}"><h4>{{t}}</h4></a> <!-- hyperlink that passes the name variable to the flask app-->
+        </form>
+        <img class="img-fluid" style="width: 20%;" src="{{im}}">
+        <div class="col-sm"> {{s|safe}} </div> <!-- safe renders html tags (summary would have <a></a> instead of bold text)-->
+      </div>
+        <br>
+        <br>
+      </div>
+    {% endfor %}
+</div>
   
 </html>

@@ -41,6 +41,7 @@ def makeList(i):
     recipeTitle = []
     recipeImage = []
     recipeUrl = []
+    recipeSummary = []
     info = []
     k = get_key('keys/key_spoonacular.txt')
     for x in range(i):
@@ -49,14 +50,16 @@ def makeList(i):
         recipeTitle.append(res.json()['recipes'][0]['title'])
         recipeImage.append(res.json()['recipes'][0]['image'])
         recipeUrl.append(res.json()['recipes'][0]['spoonacularSourceUrl'])
+        recipeSummary.append(res.json()['recipes'][0]['summary'])
     #print (res.json()['title'])
     #recipeImage.append(res.json()['image'])
     #recipeUrl.append(res.json()['sourceUrl'])
     info.append(recipeTitle)
     info.append(recipeImage)
     info.append(recipeUrl)
+    info.append(recipeSummary)
     return info
 
     
 
-print(makeList(5))
+#print(makeList(5))

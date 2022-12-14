@@ -140,11 +140,16 @@ def friendpage():
 
 @app.route('/explore', methods = ['GET', 'POST'])
 def explorepage():
-	info = makeList(5)
-	title = info[0]
-	image = info[1]
-	url = info[2]
-	return render_template('explore.html') 
+	#try block because some recipes don't have images
+	try:       								
+		info = makeList(5)
+		title = info[0]
+		image = info[1]
+		url = info[2]
+		summary = info[3]
+		return render_template('explore.html', i=zip(title, image, url, summary))
+	except:
+		return render_template('explore.html', error="An unexpected error has occured")
 # 	#render template here
 
 # @app.route('/leaderboard', methods = ['GET', 'POST'])
@@ -162,37 +167,39 @@ def search():
 
 @app.route('/<name>', methods = ['GET', 'POST'])
 def results(name):
-	k = get_key('keys/key_edamam.txt')
-	url =  "https://api.edamam.com/api/recipes/v2"
-	res = requests.get(url, params={'type':'public', 'app_id':"904296dd", 'app_key':k, 'q': name})
-	#print(res.json()['hits'][0]['recipe'].keys())
-	c = int(res.json()['hits'][0]['recipe']['calories'])
-	#print(c)
-	i = res.json()['hits'][0]['recipe']['image'] # picture of food
-	#print(i)
-	u = res.json()['hits'][0]['recipe']['url'] #source url
-	#print(u)
-	ct = res.json()['hits'][0]['recipe']['cuisineType'] #type of cuisine (American, South American...)
-	#print(ct)
-	ing = res.json()['hits'][0]['recipe']['ingredientLines'] #list of ingredients
-	#print(ing)
-	d = res.json()['hits'][0]['recipe']['digest'] #nutrition
-	#print(d)
-	f = int(res.json()['hits'][0]['recipe']['digest'][0]['total']) #fat content
-	#print(f)
-	carb = int(res.json()['hits'][0]['recipe']['digest'][1]['total']) #carb content
-	#print(carb)
-	p = int(res.json()['hits'][0]['recipe']['digest'][2]['total']) #protein content
-	#print(p)
-	chol = int(res.json()['hits'][0]['recipe']['digest'][3]['total']) #cholesterol content
-	#print(chol)
-	sod = int(res.json()['hits'][0]['recipe']['digest'][4]['total']) #sodium content
-	#print(sod)
-	y = int(res.json()['hits'][0]['recipe']['yield']) #number of servings
-	#print(y)
-	#return res.json()['hits'][0]['recipe']
-	return render_template("results.html", n=name, c=c, i=i, ct=ct[0], ing=', '.join(ing), f=f, carb=carb, p=p, chol=chol, y=y, sod=sod, u=u)
-
+	try:
+		k = get_key('keys/key_edamam.txt')
+		url =  "https://api.edamam.com/api/recipes/v2"
+		res = requests.get(url, params={'type':'public', 'app_id':"904296dd", 'app_key':k, 'q': name})
+		#print(res.json()['hits'][0]['recipe'].keys())
+		c = int(res.json()['hits'][0]['recipe']['calories'])
+		#print(c)
+		i = res.json()['hits'][0]['recipe']['image'] # picture of food
+		#print(i)
+		u = res.json()['hits'][0]['recipe']['url'] #source url
+		#print(u)
+		ct = res.json()['hits'][0]['recipe']['cuisineType'] #type of cuisine (American, South American...)
+		#print(ct)
+		ing = res.json()['hits'][0]['recipe']['ingredientLines'] #list of ingredients
+		#print(ing)
+		d = res.json()['hits'][0]['recipe']['digest'] #nutrition
+		#print(d)
+		f = int(res.json()['hits'][0]['recipe']['digest'][0]['total']) #fat content
+		#print(f)
+		carb = int(res.json()['hits'][0]['recipe']['digest'][1]['total']) #carb content
+		#print(carb)
+		p = int(res.json()['hits'][0]['recipe']['digest'][2]['total']) #protein content
+		#print(p)
+		chol = int(res.json()['hits'][0]['recipe']['digest'][3]['total']) #cholesterol content
+		#print(chol)
+		sod = int(res.json()['hits'][0]['recipe']['digest'][4]['total']) #sodium content
+		#print(sod)
+		y = int(res.json()['hits'][0]['recipe']['yield']) #number of servings
+		#print(y)
+		#return res.json()['hits'][0]['recipe']
+		return render_template("results.html", n=name, c=c, i=i, ct=ct[0], ing=', '.join(ing), f=f, carb=carb, p=p, chol=chol, y=y, sod=sod, u=u)
+	except:
+		return render_template("results.html", error="Unable to retrieve data")
 
 @app.route('/logout') 
 def logout(): 
@@ -203,4 +210,3 @@ def logout():
 if __name__ == '__main__':
 	app.debug = True
 	app.run()
-	
