@@ -123,3 +123,12 @@ JamesY -- 2022-12-13 18:10
 - .gitignore for keys
 --------------------------------------------------------------
 ==============================================================
+
+AnnaF, JamesY, RussellG, MayQ -- 2022-12-13 22:00
+--------------------------------------------------------------
+- Tested out explore page 
+- figured out how to use love calculator API 
+- successfully used love calculator to find top potential friends across the website, which are shown on the Add Friends page as a list.
+- Planned out new features that are not mentioned in the design doc (profile)
+--------------------------------------------------------------
+==============================================================

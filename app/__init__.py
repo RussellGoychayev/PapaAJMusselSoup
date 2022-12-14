@@ -19,11 +19,14 @@ DB_FILE="data.db"
 db = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
 c = db.cursor()
 
-#c.execute("DROP TABLE IF EXISTS user_info;")
-c.execute("CREATE TABLE IF NOT EXISTS user_info (username TEXT, password TEXT, stories_ids TEXT);")
+# table for all user information 
+c.execute("CREATE TABLE IF NOT EXISTS user_info (username TEXT, password TEXT, friends TEXT, liked_recipies TEXT);")
 
-#c.execute("DROP TABLE IF EXISTS pages;")
-c.execute("CREATE TABLE IF NOT EXISTS pages(story_id int, title text, content text, edit_ids text)");
+#give the user some friends for testing purposes
+# c.execute(f'UPDATE user_info SET friends = ? WHERE username = ?', ["john cena", session['username'][0]])
+
+# table for recipie leaderboard - stretch goal !!
+c.execute("CREATE TABLE IF NOT EXISTS foods(dish_name TEXT, likes INTEGER);")
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -134,8 +137,42 @@ def home():
 
 # OUTLINE FOR WEB FRAME
 @app.route('/friends', methods = ['GET', 'POST'])
-def friendpage(): 
-	return render_template('friends.html')
+def friendpage():
+	# #give me all of this user's friends
+	bestFriends = [] 
+	person = session['username'][0]
+	#store all users that are not me in a list of tuples
+	everyone = c.execute('SELECT username from user_info')
+	#store all users that are not me in a list
+	allUsers = everyone.fetchall()
+	# loop through love calculator 
+	for x in range(len(allUsers)):
+		loveNumber = int(getLove(person,allUsers[x]))
+		#print(loveNumber)
+		if(loveNumber>40):
+			bestFriends.append(allUsers[x])
+	# testing!
+	# print("allUsers:")
+	# print(allUsers)
+	# print("bestFriends:")
+	# print(bestFriends)
+	return render_template('addfriends.html', bestfriend=bestFriends)
+
+# #this function will return a list of all your best friends (using love calculator)
+# def makeFriends():
+# 	allUsers = [] 
+# 	bestFriends = [] 
+# 	person = session['username'][0]
+# 	#store all users that are not me in a list of tuples
+# 	everyone = c.execute(f'SELECT username FROM user_info WHERE user!= {person}')
+# 	#store all users that are not me in a list
+# 	allUsers.append(everyone.fetchall())
+# 	# loop through love calculator 
+# 	for x in len(allUsers):
+# 		if(getLove(person,allUsers[x])>0):
+# 			bestFriends.append(allUsers[x])
+# 	return bestFriends
+
 # 	#render template here
 
 @app.route('/explore', methods = ['GET', 'POST'])
@@ -149,7 +186,7 @@ def explorepage():
 		summary = info[3]
 		return render_template('explore.html', i=zip(title, image, url, summary))
 	except:
-		return render_template('explore.html', error="An unexpected error has occured")
+		return render_template('explore.html', error="An unexpected error has occurred")
 # 	#render template here
 
 # @app.route('/leaderboard', methods = ['GET', 'POST'])
@@ -201,9 +238,10 @@ def results(name):
 	except:
 		return render_template("results.html", error="Unable to retrieve data")
 
+# print(makeFriends)
 @app.route('/logout') 
 def logout(): 
-	session.pop("username")
+	session.pop("username", None)
 	#session.pop("password")
 	return redirect("/login")
 

@@ -1,5 +1,5 @@
 import requests
-
+from __init__ import *
 def get_key(s):
     with open(s) as f:
         k = f.readlines() #nasa api key
@@ -59,7 +59,18 @@ def makeList(i):
     info.append(recipeUrl)
     info.append(recipeSummary)
     return info
-
     
+def getLove(a, b):
+    k = get_key('keys/key_loveCalculator.txt')
+    url = "https://love-calculator.p.rapidapi.com/getPercentage"
+    querystring = {"fname":a,"sname":b}
+    headers = {
+    'x-rapidapi-key': k, 
+    'x-rapidapi-host':"love-calculator.p.rapidapi.com"
+    }
+    response = requests.request("GET", url, headers=headers, params=querystring)
+    return response.json()['percentage']
 
+#testing
+# print(getLove('Anna', 'May'))
 #print(makeList(5))
