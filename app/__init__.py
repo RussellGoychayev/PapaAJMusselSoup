@@ -149,13 +149,13 @@ def friendpage():
 	for x in range(len(allUsers)):
 		loveNumber = int(getLove(person,allUsers[x]))
 		#print(loveNumber)
-		if(loveNumber>40):
+		if(loveNumber>0):
 			bestFriends.append(allUsers[x])
 	# testing!
 	# print("allUsers:")
 	# print(allUsers)
 	# print("bestFriends:")
-	# print(bestFriends)
+	print(bestFriends)
 	return render_template('addfriends.html', bestfriend=bestFriends)
 
 # #this function will return a list of all your best friends (using love calculator)
@@ -192,6 +192,9 @@ def explorepage():
 # @app.route('/leaderboard', methods = ['GET', 'POST'])
 # def viewLeader(): 
 # 	#render template here
+@app.route('/liked_recipes', methods= ['GET', 'POST'])
+def like():
+	
 
 @app.route('/search', methods = ['GET', 'POST'])
 def search():
