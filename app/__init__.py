@@ -20,7 +20,7 @@ db = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, oth
 c = db.cursor()
 
 # table for all user information 
-#c.execute("DROP TABLE IF EXISTS user_info") DELETES TABLE IN CASE YOU WANT TO MAKE CHANGES TO USER_INFO 
+#c.execute("DROP TABLE IF EXISTS user_info") #DELETES TABLE IN CASE YOU WANT TO MAKE CHANGES TO USER_INFO 
 c.execute("CREATE TABLE IF NOT EXISTS user_info (username TEXT, password TEXT, followers TEXT, following TEXT, liked_recipes TEXT);")
 
 #give the user some friends for testing purposes
@@ -136,10 +136,14 @@ def home():
 	c.execute("SELECT * from user_info")
 	print(c.fetchall())
 	c.execute("SELECT liked_recipes from user_info WHERE username = ?", [session['username'][0]])
-	likedlist = "".join(c.fetchall()[0]).split() #list of all liked recipes
+	a = c.fetchall()
+	print(a)
 	spacedlist = [] 
-	for i in likedlist[1:]: #removes placeholder none and replaces _ with spaces
-		spacedlist.append(i.replace("_", " "))
+	if (len(a) != 0):
+		likedlist = "".join(c.fetchall()[0]).split() #list of all liked recipes
+		print(likedlist)
+		for i in likedlist[1:]: #removes placeholder none and replaces _ with spaces
+			spacedlist.append(i.replace("_", " "))
 	return render_template('landing.html', liked=spacedlist, user=session['username'][0])
 	#render template here
 
@@ -157,7 +161,7 @@ def friendpage():
 	for x in range(len(allUsers)):
 		loveNumber = int(getLove(person,allUsers[x]))
 		#print(loveNumber)
-		if(loveNumber>0):
+		if(loveNumber>40):
 			bestFriends.append(allUsers[x])
 	# testing!
 	# print("allUsers:")
@@ -165,6 +169,18 @@ def friendpage():
 	# print("bestFriends:")
 	print(bestFriends)
 	return render_template('addfriends.html', bestfriend=bestFriends)
+
+@app.route("/otherprofile/<user>", methods=["GET", "POST"])
+def profile(user):
+	c.execute("SELECT * from user_info")
+	#print(c.fetchall())
+	c.execute("SELECT liked_recipes from user_info WHERE username = ?", [session['username'][0]])
+	likedlist = "".join(c.fetchall()[0]).split() #list of all liked recipes
+	spacedlist = [] 
+	for i in likedlist[1:]: #removes placeholder none and replaces _ with spaces
+		spacedlist.append(i.replace("_", " "))
+	return render_template("profile.html", user=user, liked=spacedlist)
+
 
 # #this function will return a list of all your best friends (using love calculator)
 # def makeFriends():
@@ -202,12 +218,13 @@ def explorepage():
 # 	#render template here
 @app.route('/liked_recipes/<t>', methods= ['GET', 'POST'])
 def like(t):
-	c.execute('SELECT liked_recipes FROM user_info')
+	c.execute('SELECT liked_recipes FROM user_info where username=?', [session['username'][0]])
 	liked = c.fetchall()
+	print(liked)
 	current = "" #current liked recipes
 	for i in liked:
 		current = current + "".join(i) + " " #string of liked recipes separated by a space
-	c.execute("UPDATE user_info SET liked_recipes = ?", [current+t.replace(" ","_")]) #adds liked recipe to table, replace spaces with _
+	c.execute("UPDATE user_info SET liked_recipes = ? where username=?", [current+t.replace(" ","_"), session['username'][0]]) #adds liked recipe to table, replace spaces with _
 	#c.execute('SELECT liked_recipes FROM user_info')
 	#test = c.fetchall()
 	db.commit()

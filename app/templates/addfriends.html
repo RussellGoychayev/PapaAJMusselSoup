@@ -42,7 +42,7 @@
   <div class="friendlist" style="margin-left: 50px; margin-top: 50px; font-size: larger;">
   {% for list in bestfriend %}  <!-- loop to display the search results-->
       {% for name in list %}  <!-- loop to display the search results-->
-        {{name}}
+        <a href="/otherprofile/{{name}}" >{{name}}</a>
         <br>
         <br>
         <br>

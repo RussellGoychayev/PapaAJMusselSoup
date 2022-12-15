@@ -14,7 +14,7 @@
           <p style="color:red;"> {{error_text}} </p>
           <form action="/register_helper" method="POST">
             <label>Username</label><br>
-            <input type="text" name="username" action="POST" minlength="1" class="form-control" placeholder="Username" required></input><br>
+            <input type="text" name="username" action="POST" minlength="5" class="form-control" placeholder="Username" required></input><br>
             <label>Password</label><br>
             <input type="password" name="password" action="POST" minlength="7" class="form-control" placeholder="Password" required></input><br>
             <input type="submit" class="btn btn-primary" value="Sign up">
