@@ -115,7 +115,7 @@ def register_helper():
 			print("username alr exists. sent u back to /register")
 			return redirect('/register')
 
-	c.execute('INSERT INTO user_info VALUES(?, ?, "")', [username, password])
+	c.execute('INSERT INTO user_info VALUES(?, ?, ?, "")', [username, password, "t"])
 	db.commit()
 	print("register helper: success")
 	return redirect("/login")
@@ -194,7 +194,7 @@ def explorepage():
 # 	#render template here
 @app.route('/liked_recipes/<t>', methods= ['GET', 'POST'])
 def like(t):
-	c.execute("SELECT * FROM user_info")
+	c.execute('SELECT * FROM user_info')
 	users = c.fetchall()
 	return users
 
