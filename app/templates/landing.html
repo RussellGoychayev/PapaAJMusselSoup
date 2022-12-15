@@ -38,5 +38,27 @@
     </div>
   </nav>
 </body>
+<h1>{{user}}</h1>
+<br>
+<div class="container-fluid">
+  <div class="row justify-content-md-center">
+    <div class="col col-5 border border-2 rounded border-dark">
+    <h2>Liked Recipes</h2>
+    <hr>
+    {% for recipe in liked %}  <!-- loop to display the search results-->
+          {{recipe}}
+          <br>
+      {% endfor %}
+      </div>
 
+      <div class="col col-5 border border-dark" style="margin-left: 90px;">
+        <h2>test</h2>
+      </div>
+
+  </div>
+
+
+</div>
+
+</div>
 </html>

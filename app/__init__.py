@@ -20,7 +20,8 @@ db = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, oth
 c = db.cursor()
 
 # table for all user information 
-c.execute("CREATE TABLE IF NOT EXISTS user_info (username TEXT, password TEXT, friends TEXT, liked_recipes TEXT);")
+#c.execute("DROP TABLE IF EXISTS user_info") DELETES TABLE IN CASE YOU WANT TO MAKE CHANGES TO USER_INFO 
+c.execute("CREATE TABLE IF NOT EXISTS user_info (username TEXT, password TEXT, followers TEXT, following TEXT, liked_recipes TEXT);")
 
 #give the user some friends for testing purposes
 # c.execute(f'UPDATE user_info SET friends = ? WHERE username = ?', ["john cena", session['username'][0]])
@@ -115,7 +116,7 @@ def register_helper():
 			print("username alr exists. sent u back to /register")
 			return redirect('/register')
 
-	c.execute('INSERT INTO user_info VALUES(?, ?, "")', [username, password])
+	c.execute('INSERT INTO user_info VALUES(?, ?, ?, ?, ?)', [username, password, "none", "none", "none"])
 	db.commit()
 	print("register helper: success")
 	return redirect("/login")
@@ -132,7 +133,14 @@ def index():
 # and other routes.
 @app.route('/home', methods = ['GET', 'POST'])
 def home(): 
-	return render_template('landing.html')
+	c.execute("SELECT * from user_info")
+	print(c.fetchall())
+	c.execute("SELECT liked_recipes from user_info WHERE username = ?", [session['username'][0]])
+	likedlist = "".join(c.fetchall()[0]).split() #list of all liked recipes
+	spacedlist = [] 
+	for i in likedlist[1:]: #removes placeholder none and replaces _ with spaces
+		spacedlist.append(i.replace("_", " "))
+	return render_template('landing.html', liked=spacedlist, user=session['username'][0])
 	#render template here
 
 # OUTLINE FOR WEB FRAME
@@ -194,9 +202,16 @@ def explorepage():
 # 	#render template here
 @app.route('/liked_recipes/<t>', methods= ['GET', 'POST'])
 def like(t):
-	c.execute('SELECT * FROM user_info')
-	users = c.fetchall()
-	return users
+	c.execute('SELECT liked_recipes FROM user_info')
+	liked = c.fetchall()
+	current = "" #current liked recipes
+	for i in liked:
+		current = current + "".join(i) + " " #string of liked recipes separated by a space
+	c.execute("UPDATE user_info SET liked_recipes = ?", [current+t.replace(" ","_")]) #adds liked recipe to table, replace spaces with _
+	#c.execute('SELECT liked_recipes FROM user_info')
+	#test = c.fetchall()
+	db.commit()
+	return redirect("/home")
 
 @app.route('/search', methods = ['GET', 'POST'])
 def search():
