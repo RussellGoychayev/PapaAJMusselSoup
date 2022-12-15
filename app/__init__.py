@@ -20,7 +20,7 @@ db = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, oth
 c = db.cursor()
 
 # table for all user information 
-c.execute("CREATE TABLE IF NOT EXISTS user_info (username TEXT, password TEXT, friends TEXT, liked_recipies TEXT);")
+c.execute("CREATE TABLE IF NOT EXISTS user_info (username TEXT, password TEXT, friends TEXT, liked_recipes TEXT);")
 
 #give the user some friends for testing purposes
 # c.execute(f'UPDATE user_info SET friends = ? WHERE username = ?', ["john cena", session['username'][0]])
@@ -192,9 +192,11 @@ def explorepage():
 # @app.route('/leaderboard', methods = ['GET', 'POST'])
 # def viewLeader(): 
 # 	#render template here
-@app.route('/liked_recipes', methods= ['GET', 'POST'])
-def like():
-	
+@app.route('/liked_recipes/<t>', methods= ['GET', 'POST'])
+def like(t):
+	c.execute("SELECT * FROM user_info")
+	users = c.fetchall()
+	return users
 
 @app.route('/search', methods = ['GET', 'POST'])
 def search():

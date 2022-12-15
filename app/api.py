@@ -1,8 +1,10 @@
 import requests
 from __init__ import *
+import os
+
 def get_key(s):
     with open(s) as f:
-        k = f.readlines() #nasa api key
+        k = f.readlines() #api key
     key = k[0].strip() #changes the key from a list to a string
     return key
 
