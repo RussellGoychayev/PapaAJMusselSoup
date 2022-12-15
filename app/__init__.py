@@ -115,7 +115,7 @@ def register_helper():
 			print("username alr exists. sent u back to /register")
 			return redirect('/register')
 
-	c.execute('INSERT INTO user_info VALUES(?, ?, ?, "")', [username, password, "t"])
+	c.execute('INSERT INTO user_info VALUES(?, ?, "")', [username, password])
 	db.commit()
 	print("register helper: success")
 	return redirect("/login")
