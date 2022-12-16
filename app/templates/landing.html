@@ -38,21 +38,33 @@
     </div>
   </nav>
 </body>
-<h1>{{user}}</h1>
-<br>
+<h1 style="text-align: center;">{{user}}</h1>
+<hr style="margin-left: 100px; margin-right: 100px;">
 <div class="container-fluid">
   <div class="row justify-content-md-center">
-    <div class="col col-5 border border-2 rounded border-dark">
+    <div class="col col-5 border border-2 rounded border-dark" style="height: fit-content ;">
     <h2>Liked Recipes</h2>
     <hr>
     {% for recipe in liked %}  <!-- loop to display the search results-->
           {{recipe}}
           <br>
       {% endfor %}
+      <br>
       </div>
 
-      <div class="col col-5 border border-dark" style="margin-left: 90px;">
-        <h2>test</h2>
+      <div class="col col-5 border border-2 border-dark" style="margin-left: 90px;">
+        <h2>Following ({{followingcount}})</h2>
+        {% for name in following %}  
+          {{name}}
+          <br>
+      {% endfor %}
+      <hr>
+        <h2>Followers ({{followercount}})</h2>
+        {% for name in followers %}  
+        {{name}}
+        <br>
+      {% endfor %}
+      <br>
       </div>
 
   </div>

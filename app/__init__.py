@@ -115,6 +115,8 @@ def register_helper():
 		if (username == tuple[0]):
 			print("username alr exists. sent u back to /register")
 			return redirect('/register')
+		elif (" " in username): #no spaces in username
+			return redirect('/register')
 
 	c.execute('INSERT INTO user_info VALUES(?, ?, ?, ?, ?)', [username, password, "", "", ""])
 	db.commit()
@@ -134,17 +136,23 @@ def index():
 @app.route('/home', methods = ['GET', 'POST'])
 def home(): 
 	c.execute("SELECT * from user_info")
-	print(c.fetchall())
+	#print(c.fetchall())
 	c.execute("SELECT liked_recipes from user_info WHERE username = ?", [session['username'][0]])
 	recipes = "".join(c.fetchall()[0]) #string of recipes
-	#print(len(recipes))
+	print(recipes)
 	spacedlist = [] 
 	if (" " in recipes):
 		likedlist = recipes.split() #list of all liked recipes
 		#print(likedlist)
 		for i in likedlist: #removes placeholder none and replaces _ with spaces
 			spacedlist.append(i.replace("_", " "))
-	return render_template('landing.html', liked=spacedlist, user=session['username'][0])
+
+	c.execute("SELECT following from user_info where username = ?", [session['username'][0]])
+	following = "".join(c.fetchall()[0]).split()
+	c.execute("SELECT followers from user_info where username = ?", [session['username'][0]])
+	followers = "".join(c.fetchall()[0]).split()
+	#print (following)
+	return render_template('landing.html', liked=spacedlist, user=session['username'][0], following=following, followingcount=len(following), followers=followers, followercount=len(followers))
 	#render template here
 
 # OUTLINE FOR WEB FRAME
@@ -154,34 +162,89 @@ def friendpage():
 	bestFriends = [] 
 	person = session['username'][0]
 	#store all users that are not me in a list of tuples
-	everyone = c.execute('SELECT username from user_info')
+
+	#prevents recommending users you already follow
+	c.execute("SELECT * from user_info")
+	alreadyfollowing = []
+	for row in c.fetchall(): #each row of the table
+		if person in row[2]:
+			alreadyfollowing.append(row[0]) #list of people you already follow
+
 	#store all users that are not me in a list
+	everyone = c.execute('SELECT username from user_info where username != ?', [person])
 	allUsers = everyone.fetchall()
+	listofusers = []
+	for x in allUsers:
+		listofusers.append("".join(x))
+	print(listofusers)
+	print(alreadyfollowing)
+
+	#removes users from list that are already followed
+	for i in alreadyfollowing:
+		print(i)
+		listofusers.remove(i)
+	print(listofusers)
 	# loop through love calculator 
-	for x in range(len(allUsers)):
-		loveNumber = int(getLove(person,allUsers[x]))
+	for x in listofusers:
+		loveNumber = int(getLove(person,x))
 		#print(loveNumber)
 		if(loveNumber>40):
-			bestFriends.append(allUsers[x])
+			bestFriends.append(x)
+	# print(bestFriends)
 	# testing!
 	# print("allUsers:")
 	# print(allUsers)
 	# print("bestFriends:")
-	print(bestFriends)
-	return render_template('addfriends.html', bestfriend=bestFriends)
+	#print(bestFriends)
+	return render_template('addfriends.html', bestfriend=bestFriends, l=len(bestFriends))
 
 @app.route("/otherprofile/<user>", methods=["GET", "POST"])
 def profile(user):
 	c.execute("SELECT * from user_info")
 	#print(c.fetchall())
-	c.execute("SELECT liked_recipes from user_info WHERE username = ?", [session['username'][0]])
-	likedlist = "".join(c.fetchall()[0]).split() #list of all liked recipes
+	c.execute("SELECT liked_recipes from user_info WHERE username = ?", [user])
+	recipes = "".join(c.fetchall()[0]) #string of recipes
 	spacedlist = [] 
-	for i in likedlist[1:]: #removes placeholder none and replaces _ with spaces
-		spacedlist.append(i.replace("_", " "))
+	if (" " in recipes):
+		likedlist = recipes.split() #list of all liked recipes
+		for i in likedlist: #removes placeholder none and replaces _ with spaces
+			spacedlist.append(i.replace("_", " "))
 	return render_template("profile.html", user=user, liked=spacedlist)
 
+@app.route("/addfriend/<user>", methods=["GET", "POST"])
+def add(user):
 
+# for i in liked:
+# 		current = current + "".join(i) + " " #string of liked recipes separated by a space
+# 	c.execute("UPDATE user_info SET liked_recipes = ? where username=?", [current+t.replace(" ","_"), session['username'][0]]) #adds liked recipe to table, replace spaces with _
+# 	#c.execute('SELECT liked_recipes FROM user_info')
+# 	#test = c.fetchall()
+# 	db.commit()
+
+	c.execute("SELECT followers from user_info WHERE username= ?", [user])
+	following = c.fetchall() #followers of the person you are going to follow
+	c.execute("SELECT following from user_info WHERE username= ?", [session['username'][0]])
+	followers = c.fetchall() #people who you are currently following
+	
+	#updates the person who you are following's followers
+	followinglist = ""
+	for f in following:
+		followinglist = followinglist + "".join(f) + " " #current followers
+	c.execute("UPDATE user_info SET followers = ? where username = ?", [followinglist+session['username'][0], user])
+	#updates your following
+	followerlist = ""
+	# print("followers:")
+	# print(followers)
+	# print("following:")
+	# print(following)
+	for f in followers:
+		followerlist = followerlist + "".join(f) + " " #current followers
+	# print("followerlist:")
+	# print(followerlist)
+	c.execute("UPDATE user_info SET following = ? where username = ?", [followerlist+user, session['username'][0]])
+
+	db.commit()
+	return redirect("/home")
 # #this function will return a list of all your best friends (using love calculator)
 # def makeFriends():
 # 	allUsers = [] 

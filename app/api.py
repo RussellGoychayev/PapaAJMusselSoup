@@ -34,7 +34,7 @@ def search_recipe(query, l, u): #searches using query as a keyword and returns r
     res = requests.get(url, params={'type':'public', 'app_id':"904296dd", 'app_key':k, 'q': query})
     results = []
     while (l<u):
-        results.append(res.json()['hits'][l]['recipe']['label']) #the index after hits is the x result (2 is second result from searching)
+        results.append(res.json()['hits'][l]['recipe']['label']) #the index after hits is the x result (1 is second result from searching)
         l = l+1
     return results 
     

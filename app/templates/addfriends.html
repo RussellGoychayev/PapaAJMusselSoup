@@ -39,15 +39,24 @@
   </nav>
 
   <h1 style="text-align: center; margin-top: 10px;">Recommended Friends</h1>
-  <div class="friendlist" style="margin-left: 50px; margin-top: 50px; font-size: larger;">
-  {% for list in bestfriend %}  <!-- loop to display the search results-->
-      {% for name in list %}  <!-- loop to display the search results-->
-        <a href="/otherprofile/{{name}}" >{{name}}</a>
-        <br>
-        <br>
+  <div class="friendlist" style="margin-left: 50px; margin-top: 50px; font-size: larger; margin-right: 50px;">
+  
+  <div class="container-fluid">
+    <div class="col border border-2 rounded border-dark">
+    <div class="text" style="margin-left: 50px; margin-top: 30px; font-size: x-large; font-weight: bold;">
+
+      {% for name in bestfriend %}  <!-- loop to display the search results-->
+        {{name}}
+        <a href="/otherprofile/{{name}}" class="btn btn-primary" style="margin-left: 30px;" role="button">View profile</a></button>
+        <a href="/addfriend/{{name}}" class="btn btn-primary" style="margin-left: 30px;" role="button">Follow</a></button>
+        <hr>
         <br>
       {% endfor %}
-    {% endfor %}
+    </div>
+  </div>
+
+  </div>
+
   </div>
   </body>
 </html>
