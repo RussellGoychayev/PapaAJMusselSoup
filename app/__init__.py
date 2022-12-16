@@ -136,9 +136,13 @@ def index():
 @app.route('/home', methods = ['GET', 'POST'])
 def home(): 
 	c.execute("SELECT * from user_info")
-	#print(c.fetchall())
+	print(c.fetchall())
 	c.execute("SELECT liked_recipes from user_info WHERE username = ?", [session['username'][0]])
-	recipes = "".join(c.fetchall()[0]) #string of recipes
+	recipes = ""
+	try:
+		recipes = "".join(c.fetchall()[0]) #string of recipes
+	except:
+		print("MAy is sad")
 	print(recipes)
 	spacedlist = [] 
 	if (" " in recipes):
@@ -148,10 +152,21 @@ def home():
 			spacedlist.append(i.replace("_", " "))
 
 	c.execute("SELECT following from user_info where username = ?", [session['username'][0]])
-	following = "".join(c.fetchall()[0]).split()
+	following = []
+	try:
+		following = "".join(c.fetchall()[0]).split()
+		print("FOllowing")
+	except:
+		print("Let MAy win the lottery")
 	c.execute("SELECT followers from user_info where username = ?", [session['username'][0]])
-	followers = "".join(c.fetchall()[0]).split()
+	followers = []
+	try:
+		followers = "".join(c.fetchall()[0]).split()
+		print("Stern SUCKS")
+	except:
+		print("Winning lottery is hard tho")
 	#print (following)
+
 	return render_template('landing.html', liked=spacedlist, user=session['username'][0], following=following, followingcount=len(following), followers=followers, followercount=len(followers))
 	#render template here
 
@@ -187,8 +202,8 @@ def friendpage():
 	# loop through love calculator 
 	for x in listofusers:
 		loveNumber = int(getLove(person,x))
-		#print(loveNumber)
-		if(loveNumber>40):
+		print(loveNumber)
+		if(loveNumber>=0):
 			bestFriends.append(x)
 	# print(bestFriends)
 	# testing!
