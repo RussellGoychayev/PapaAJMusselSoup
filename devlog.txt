@@ -132,6 +132,7 @@ AnnaF, JamesY, RussellG, MayQ -- 2022-12-13 22:00
 - Planned out new features that are not mentioned in the design doc (profile)
 --------------------------------------------------------------
 ==============================================================
+
 AnnaF, JamesY, MayQ -- 2022-12-14 13:13
 --------------------------------------------------------------
 - "like buttons" 
@@ -144,3 +145,18 @@ AnnaF, JamesY, RussellG, MayQ -- 2022-12-14 22:00
 - figured out changes to design doc and updated it 
 --------------------------------------------------------------
 
+
+AnnaF, JamesY, MayQ -- 2022-12-15 13:13
+--------------------------------------------------------------
+- tried to fix the like recipes feature
+--------------------------------------------------------------
+==============================================================
+
+JamesY -- 2022-12-15 23:56
+--------------------------------------------------------------
+- fixed like system
+- added following feature
+- fixed bug where you were recommended to follow yourself
+- removed already followed people from recommended follows
+--------------------------------------------------------------
+==============================================================
