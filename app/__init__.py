@@ -116,7 +116,7 @@ def register_helper():
 			print("username alr exists. sent u back to /register")
 			return redirect('/register')
 
-	c.execute('INSERT INTO user_info VALUES(?, ?, ?, ?, ?)', [username, password, "none", "none", "none"])
+	c.execute('INSERT INTO user_info VALUES(?, ?, ?, ?, ?)', [username, password, "", "", ""])
 	db.commit()
 	print("register helper: success")
 	return redirect("/login")
@@ -136,13 +136,13 @@ def home():
 	c.execute("SELECT * from user_info")
 	print(c.fetchall())
 	c.execute("SELECT liked_recipes from user_info WHERE username = ?", [session['username'][0]])
-	a = c.fetchall()
-	print(a)
+	recipes = "".join(c.fetchall()[0]) #string of recipes
+	#print(len(recipes))
 	spacedlist = [] 
-	if (len(a) != 0):
-		likedlist = "".join(c.fetchall()[0]).split() #list of all liked recipes
-		print(likedlist)
-		for i in likedlist[1:]: #removes placeholder none and replaces _ with spaces
+	if (" " in recipes):
+		likedlist = recipes.split() #list of all liked recipes
+		#print(likedlist)
+		for i in likedlist: #removes placeholder none and replaces _ with spaces
 			spacedlist.append(i.replace("_", " "))
 	return render_template('landing.html', liked=spacedlist, user=session['username'][0])
 	#render template here
