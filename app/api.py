@@ -19,14 +19,23 @@ def get_title(x):
 def get_photo(x):
     url = f"https://api.spoonacular.com/recipes/{x}/information?apiKey=7081bf709f0d44b7984587105086357f"
     res = requests.get(url)
-    recipies_api_summary = res.json()['image']
-    return recipies_api_summary
+    recipes_api_summary = res.json()['image']
+    return recipes_api_summary
 
-def get_url(x):
-    url = f"https://api.spoonacular.com/recipes/{x}/information?apiKey=7081bf709f0d44b7984587105086357f"
+def get_url(name):
+    k = get_key('keys/key_spoonacular.txt')
+    url = f"https://api.spoonacular.com/recipes/complexSearch?query={name}&apiKey={k}" #url to get recipe id
     res = requests.get(url)
-    recipies_api_summary = res.json()['sourceUrl']
-    return recipies_api_summary
+    recipes_api = res.json()["results"]
+    api_id = ""
+    for i in recipes_api:
+        if name == i['title']:
+            api_id = i['id']
+
+    url2 = f"https://api.spoonacular.com/recipes/{api_id}/information?apiKey={k}" #url to get recipe name from id
+    res2 = requests.get(url2)
+    recipe_url = res2.json()["spoonacularSourceUrl"]
+    return recipe_url
 
 def search_recipe(query, l, u): #searches using query as a keyword and returns results l to u
     k = get_key('keys/key_edamam.txt')
@@ -76,3 +85,4 @@ def getLove(a, b):
 #testing
 # print(getLove('Anna', 'May'))
 #print(makeList(5))
+print(get_url("Cannoli Ice Cream w. Pistachios & Dark Chocolate"))

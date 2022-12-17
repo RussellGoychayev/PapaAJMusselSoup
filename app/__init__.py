@@ -40,7 +40,7 @@ def login():
 	#recipes_api_summary = res2.json()['summary']
 
 	url3 = 'https://api.mymemory.translated.net/get?' #url of API
-	res3 = requests.get(url3, params={'q':'Hello', 'langpair':'en|es'}) #q is the source text you want to translate. langpair is <source language>|<target language>
+	#res3 = requests.get(url3, params={'q':'Hello', 'langpair':'en|es'}) #q is the source text you want to translate. langpair is <source language>|<target language>
 	#print(res3.json())
 	# print(res3.json()['responseData']['translatedText']) #prints the Spanish translation of 'Hello'
 	return render_template('login.html')
@@ -134,40 +134,46 @@ def index():
 # This route is the home page. It will allow you to travel to the login, singup, leaderboards, friends,
 # and other routes.
 @app.route('/home', methods = ['GET', 'POST'])
-def home(): 
-	c.execute("SELECT * from user_info")
-	print(c.fetchall())
-	c.execute("SELECT liked_recipes from user_info WHERE username = ?", [session['username'][0]])
-	recipes = ""
-	try:
-		recipes = "".join(c.fetchall()[0]) #string of recipes
-	except:
-		print("MAy is sad")
-	print(recipes)
-	spacedlist = [] 
-	if (" " in recipes):
-		likedlist = recipes.split() #list of all liked recipes
-		#print(likedlist)
-		for i in likedlist: #removes placeholder none and replaces _ with spaces
-			spacedlist.append(i.replace("_", " "))
+def home():
+	try: 
+		c.execute("SELECT * from user_info")
+		#print(c.fetchall())
+		c.execute("SELECT liked_recipes from user_info WHERE username = ?", [session['username'][0]])
+		recipes = ""
+		try:
+			recipes = "".join(c.fetchall()[0]) #string of recipes
+		except:
+			print("MAy is sad")
+		#print(recipes)
+		spacedlist = []
+		urllist = [] 
+		if (" " in recipes):
+			likedlist = recipes.split() #list of all liked recipes
+			print(likedlist)
+			for i in likedlist: #removes placeholder none and replaces _ with spaces
+				urllist.append(get_url(i.replace("_", " "))) #url of liked recipes
+				spacedlist.append(i.replace("_", " "))
 
-	c.execute("SELECT following from user_info where username = ?", [session['username'][0]])
-	following = []
-	try:
-		following = "".join(c.fetchall()[0]).split()
-		print("FOllowing")
-	except:
-		print("Let MAy win the lottery")
-	c.execute("SELECT followers from user_info where username = ?", [session['username'][0]])
-	followers = []
-	try:
-		followers = "".join(c.fetchall()[0]).split()
-		print("Stern SUCKS")
-	except:
-		print("Winning lottery is hard tho")
-	#print (following)
+		#print(urllist)
+		c.execute("SELECT following from user_info where username = ?", [session['username'][0]])
+		following = []
+		try:
+			following = "".join(c.fetchall()[0]).split()
+			print("FOllowing")
+		except:
+			print("Let MAy win the lottery")
+		c.execute("SELECT followers from user_info where username = ?", [session['username'][0]])
+		followers = []
+		try:
+			followers = "".join(c.fetchall()[0]).split()
+			print("Stern SUCKS")
+		except:
+			print("Winning lottery is hard tho")
+		#print (following)
 
-	return render_template('landing.html', liked=spacedlist, user=session['username'][0], following=following, followingcount=len(following), followers=followers, followercount=len(followers))
+	except:
+		return render_template('landing.html', error="An unexpected error has occurred")
+	return render_template('landing.html', liked=zip(spacedlist, urllist), user=session['username'][0], following=following, followingcount=len(following), followers=followers, followercount=len(followers), likecount=len(spacedlist))
 	#render template here
 
 # OUTLINE FOR WEB FRAME
@@ -196,8 +202,9 @@ def friendpage():
 
 	#removes users from list that are already followed
 	for i in alreadyfollowing:
-		print(i)
-		listofusers.remove(i)
+		#print(i)
+		if i in listofusers:
+			listofusers.remove(i)
 	print(listofusers)
 	# loop through love calculator 
 	for x in listofusers:
@@ -215,16 +222,37 @@ def friendpage():
 
 @app.route("/otherprofile/<user>", methods=["GET", "POST"])
 def profile(user):
-	c.execute("SELECT * from user_info")
-	#print(c.fetchall())
-	c.execute("SELECT liked_recipes from user_info WHERE username = ?", [user])
-	recipes = "".join(c.fetchall()[0]) #string of recipes
-	spacedlist = [] 
-	if (" " in recipes):
-		likedlist = recipes.split() #list of all liked recipes
-		for i in likedlist: #removes placeholder none and replaces _ with spaces
-			spacedlist.append(i.replace("_", " "))
-	return render_template("profile.html", user=user, liked=spacedlist)
+	try:
+		c.execute("SELECT * from user_info")
+		#print(c.fetchall())
+		c.execute("SELECT liked_recipes from user_info WHERE username = ?", [user])
+		recipes = "".join(c.fetchall()[0]) #string of recipes
+		spacedlist = [] 
+		urllist = []
+		if (" " in recipes):
+			likedlist = recipes.split() #list of all liked recipes
+			for i in likedlist: #removes placeholder none and replaces _ with spaces
+				urllist.append(get_url(i.replace("_", " "))) #url of liked recipes
+				spacedlist.append(i.replace("_", " "))
+
+		c.execute("SELECT following from user_info where username = ?", [user])
+		following = []
+		try:
+			following = "".join(c.fetchall()[0]).split()
+			#print("FOllowing")
+		except:
+			print("Let MAy win the lottery")
+		c.execute("SELECT followers from user_info where username = ?", [user])
+		followers = []
+		try:
+			followers = "".join(c.fetchall()[0]).split()
+			#print("Stern SUCKS")
+		except:
+			print("Winning lottery is hard tho")
+
+	except:
+		return render_template("profile.html", error="An unexpected error has occurred")
+	return render_template("profile.html", user=user, liked=zip(spacedlist, urllist), following=following, followingcount=len(following), followers=followers, followercount=len(followers), likecount=len(spacedlist))
 
 @app.route("/addfriend/<user>", methods=["GET", "POST"])
 def add(user):

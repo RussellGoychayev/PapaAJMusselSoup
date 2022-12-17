@@ -42,23 +42,45 @@
       <h1 style="text-align: center;">{{user}}'s profile</h1>
       <br>
       <br>
+      {{error}}
 
-    <div class="container-fluid">
+      <hr style="margin-left: 100px; margin-right: 100px;">
+      <div class="container-fluid">
         <div class="row justify-content-md-center">
-          <div class="col col-5 border border-2 rounded border-dark">
-          <h2>Liked Recipes</h2>
+          <div class="col col-5 border border-2 rounded border-dark" style="height: fit-content ;">
+          <h2>Liked Recipes ({{likecount}})</h2>
           <hr>
-          {% for recipe in liked %}  <!-- loop to display the search results-->
+          {% for recipe, url in liked %}  <!-- loop to display the search results-->
                 {{recipe}}
+                <a href="{{url}}" class="btn btn-primary" style="margin-left: 30px;" role="button">View recipe</a></button>
+                <br>
                 <br>
             {% endfor %}
+            <br>
             </div>
       
-            <div class="col col-5 border border-dark" style="margin-left: 90px;">
-              <h2>Friends</h2>
+            <div class="col col-5 border border-2 border-dark" style="margin-left: 90px; height: fit-content;">
+              <h2>Following ({{followingcount}})</h2>
+              {% for name in following %}  
+                {{name}}
+                <a href="/otherprofile/{{name}}" class="btn btn-primary" style="margin-left: 30px;" role="button">View profile</a></button>
+                <br>
+            {% endfor %}
+            <hr>
+              <h2>Followers ({{followercount}})</h2>
+              {% for name in followers %}  
+              {{name}}
+              <a href="/otherprofile/{{name}}" class="btn btn-primary" style="margin-left: 30px;" role="button">View profile</a></button>
+              <br>
+            {% endfor %}
+            <br>
             </div>
       
         </div>
+      
+      
+      </div>
+      
       
       
       </div>
