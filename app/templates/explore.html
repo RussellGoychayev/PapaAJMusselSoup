@@ -41,32 +41,26 @@
 
   <div class="container-fluid">
     <div class="row"> <!-- header for explore page-->
-      <div class="col-sm"><h1> Discover new recipes! </h1></div>
+      <br>
+      <div class="col-sm" style="text-align: center;"><h1> Discover new recipes! </h1></div>
+      <br>
     </div>
     <h1>{{error}}</h1>
   {% for t,im,u,s in i %}  <!-- i is a list containing the title, image, url of the recipe-->
   <div class="row">
       <div class="col-sm">
-        <form method="POST" action="/results">
-        <a href="{{u}}"><h4>{{t}}</h4></a> <!-- hyperlink that passes the name variable to the flask app-->
-        </form>
-
-        <!-- <form action="<some url>" method="get">
-          <input type="hidden" name="from" value="1-5-2020">
-          <input type="hidden" name="to" value="30-11-2020">
-          <button type="submit">Do the thing</button>
-        </form> -->
-
-        <!-- url that looks like a button -->
-        <a href="/liked_recipes/{{t}}" class="btn btn-primary" role="button">Like</a></button>
-        <br>
-        <img class="img-fluid" style="width: 20%;" src="{{im}}">
-        <div class="col-sm"> {{s|safe}} </div> <!-- safe renders html tags (summary would have <a></a> instead of bold text)-->
+        <div class="card" style="width: 50%; margin-left: auto; margin-right: auto;">
+          <img class="card-img-top" src="{{im}}" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{t}}</h5>
+            <p class="card-text">{{s|safe}}</p>
+            <a href="{{u}}" class="btn btn-primary">Visit Recipe</a>
+            <a href="/liked_recipes/{{t}}" class="btn btn-primary" role="button">Like</a></button>
+          </div>
+        </div>
       </div>
-        <br>
-        <br>
-      </div>
+    </div>
+    <br>
     {% endfor %}
-</div>
 </body>
 </html>
