@@ -339,8 +339,8 @@ def like(t):
 	#give me all of this user's liked recipes
 	c.execute('SELECT liked_recipes FROM user_info WHERE username=?', [session['username'][0]])
 	liked = c.fetchall()
-	print("liked before:")
-	print(liked)
+	# print("liked before:")
+	# print(liked)
 	
 	#update this user's liked recipes
 	current = "" #string to append t to liked_recipes
@@ -350,17 +350,18 @@ def like(t):
 
 	c.execute('SELECT liked_recipes FROM user_info WHERE username=?', [session['username'][0]])
 	liked = c.fetchall()
-	print("liked after:")
-	print(liked)
+	# print("liked after:")
+	# print(liked)
 
 	c.execute("SELECT dish_name from foods")
 	foodarray = c.fetchall()
-	print("foods:")
-	print(foodarray)
+	# print("foods:")
+	# print(foodarray)
 	for foodtuple in foodarray:
 		if t in foodtuple:
 			c.execute("SELECT likes from foods where dish_name = ?", [t])
 			likes = c.fetchall()[0]
+			print(likes)
 			c.execute("UPDATE foods set likes = ? where dish_name = ?",[likes+1, t] )
 		else:
 			c.execute("INSERT into foods values (?, ?)", [t, 1])
