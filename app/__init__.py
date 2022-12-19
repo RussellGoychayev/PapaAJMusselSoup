@@ -19,6 +19,7 @@ DB_FILE="data.db"
 db = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
 c = db.cursor()
 
+# c.execute("DROP TABLE IF EXISTS user_info")
 # table for all user information 
 #c.execute("DROP TABLE IF EXISTS user_info") #DELETES TABLE IN CASE YOU WANT TO MAKE CHANGES TO USER_INFO 
 c.execute("CREATE TABLE IF NOT EXISTS user_info (username TEXT, password TEXT, followers TEXT, following TEXT, liked_recipes TEXT);")
@@ -27,7 +28,7 @@ c.execute("CREATE TABLE IF NOT EXISTS user_info (username TEXT, password TEXT, f
 # c.execute(f'UPDATE user_info SET friends = ? WHERE username = ?', ["john cena", session['username'][0]])
 
 # table for recipie leaderboard - stretch goal !!
-c.execute("CREATE TABLE IF NOT EXISTS foods(dish_name TEXT, likes INTEGER);")
+c.execute("CREATE TABLE IF NOT EXISTS foods(dish_name TEXT, likes INTEGER, comments TEXT);")
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -72,7 +73,7 @@ def login_helper():
 			if (password == tuple[1]):
 				session["username"] = [username]
 				# return render_template("dashboard.html")
-				return redirect("/")
+				return redirect("/home")
 				print("login_helper: logged u in")
 			else:
 				return render_template("login.html", error_message ="Incorrect Password")
@@ -114,7 +115,7 @@ def register_helper():
 	for tuple in users:
 		if (username == tuple[0]):
 			print("username alr exists. sent u back to /register")
-			return redirect('/register')
+			return render_template("register.html", error_message = "Username already exists.")
 		elif (" " in username): #no spaces in username
 			return redirect('/register')
 
@@ -125,11 +126,16 @@ def register_helper():
 
 # This route  is the index. It checks if user is in session. If yes, they are brought to home. If not, they are brought to login.
 @app.route('/', methods = ['GET', 'POST'])
-def index(): 
-	if 'username' in session:
+def index():
+	print("username:")
+	print(session['username'][0])
+	print("route:")
+	print("/")
+	print(session)
+
+	if session['username'][0] in session:
 		return redirect("/home")
-	return render_template('/login.html')
-	#render template here
+	return redirect('/login')
 
 # This route is the home page. It will allow you to travel to the login, singup, leaderboards, friends,
 # and other routes.
@@ -142,8 +148,9 @@ def home():
 		recipes = ""
 		try:
 			recipes = "".join(c.fetchall()[0]) #string of recipes
-		except:
-			print("MAy is sad")
+		except Exception as e:	
+			print(f'caught {type(e)}: e')
+			
 		#print(recipes)
 		spacedlist = []
 		urllist = [] 
@@ -160,18 +167,19 @@ def home():
 		try:
 			following = "".join(c.fetchall()[0]).split()
 			print("FOllowing")
-		except:
-			print("Let MAy win the lottery")
+		except Exception as e:	
+			print(f'caught {type(e)}: e')
 		c.execute("SELECT followers from user_info where username = ?", [session['username'][0]])
 		followers = []
 		try:
 			followers = "".join(c.fetchall()[0]).split()
 			print("Stern SUCKS")
-		except:
-			print("Winning lottery is hard tho")
-		#print (following)
-
-	except:
+		except Exception as e:	
+			print(f'caught {type(e)}: e')
+	
+	#give us info on our mistakes please ;,)
+	except Exception as e:	
+		print(f'caught {type(e)}: e')
 		return render_template('landing.html', error="An unexpected error has occurred")
 	return render_template('landing.html', liked=zip(spacedlist, urllist), user=session['username'][0], following=following, followingcount=len(following), followers=followers, followercount=len(followers), likecount=len(spacedlist))
 	#render template here
@@ -197,19 +205,19 @@ def friendpage():
 	listofusers = []
 	for x in allUsers:
 		listofusers.append("".join(x))
-	print(listofusers)
-	print(alreadyfollowing)
+	# print(listofusers)
+	# print(alreadyfollowing)
 
 	#removes users from list that are already followed
 	for i in alreadyfollowing:
 		#print(i)
 		if i in listofusers:
 			listofusers.remove(i)
-	print(listofusers)
+	# print(listofusers)
 	# loop through love calculator 
 	for x in listofusers:
 		loveNumber = int(getLove(person,x))
-		print(loveNumber)
+		# print(loveNumber)
 		if(loveNumber>=0):
 			bestFriends.append(x)
 	# print(bestFriends)
@@ -263,7 +271,8 @@ def add(user):
 # 	#c.execute('SELECT liked_recipes FROM user_info')
 # 	#test = c.fetchall()
 # 	db.commit()
-
+	print("========================================================================================")
+	print(user)
 	c.execute("SELECT followers from user_info WHERE username= ?", [user])
 	following = c.fetchall() #followers of the person you are going to follow
 	c.execute("SELECT following from user_info WHERE username= ?", [session['username'][0]])
@@ -305,6 +314,7 @@ def add(user):
 
 # 	#render template here
 
+#This is the explore page. Here you can browse recipies and like them.
 @app.route('/explore', methods = ['GET', 'POST'])
 def explorepage():
 	#try block because some recipes don't have images
@@ -319,18 +329,39 @@ def explorepage():
 		return render_template('explore.html', error="An unexpected error has occurred")
 # 	#render template here
 
-# @app.route('/leaderboard', methods = ['GET', 'POST'])
-# def viewLeader(): 
+@app.route('/leaderboard', methods = ['GET', 'POST'])
+def viewLeader(): 
+	return "a"
+
 # 	#render template here
 @app.route('/liked_recipes/<t>', methods= ['GET', 'POST'])
 def like(t):
-	c.execute('SELECT liked_recipes FROM user_info where username=?', [session['username'][0]])
+	#give me all of this user's liked recipes
+	c.execute('SELECT liked_recipes FROM user_info WHERE username=?', [session['username'][0]])
 	liked = c.fetchall()
+	print("liked before:")
 	print(liked)
-	current = "" #current liked recipes
+	
+	#update this user's liked recipes
+	current = "" #string to append t to liked_recipes
 	for i in liked:
 		current = current + "".join(i) + " " #string of liked recipes separated by a space
-	c.execute("UPDATE user_info SET liked_recipes = ? where username=?", [current+t.replace(" ","_"), session['username'][0]]) #adds liked recipe to table, replace spaces with _
+	c.execute("UPDATE user_info SET liked_recipes=? WHERE username=?", [current+t.replace(" ","_"), session['username'][0]]) #adds liked recipe to table, replace spaces with _
+
+	c.execute('SELECT liked_recipes FROM user_info WHERE username=?', [session['username'][0]])
+	liked = c.fetchall()
+	print("liked after:")
+	print(liked)
+
+	#c.execute("CREATE TABLE IF NOT EXISTS foods(dish_name TEXT, likes INTEGER, comments TEXT);")
+	#give me the number of likes this dish has
+	# c.execute('SELECT likes FROM foods WHERE dish_name=?', t)
+	# likes = c.fetchall()[0]
+	# print("LIKES HERE aiosudhaodihqwodiqhweoriqwheio/n" + likes)
+	#update the number of likes this dish has to be (previous + 1)
+	# c.execute('UPDATE foods SET liked=? WHERE dish_name=?', t)
+
+	
 	#c.execute('SELECT liked_recipes FROM user_info')
 	#test = c.fetchall()
 	db.commit()

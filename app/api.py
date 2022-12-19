@@ -25,8 +25,11 @@ def get_photo(x):
 def get_url(name):
     k = get_key('keys/key_spoonacular.txt')
     url = f"https://api.spoonacular.com/recipes/complexSearch?query={name}&apiKey={k}" #url to get recipe id
-    res = requests.get(url)
-    recipes_api = res.json()["results"]
+    res = requests.get(url).json()
+
+    print("RECIPES API =================================================================================")
+    print(res)
+    recipes_api = res["results"]
     api_id = ""
     for i in recipes_api:
         if name == i['title']:
@@ -85,4 +88,4 @@ def getLove(a, b):
 #testing
 # print(getLove('Anna', 'May'))
 #print(makeList(5))
-print(get_url("Cannoli Ice Cream w. Pistachios & Dark Chocolate"))
+# print(get_url("Cannoli Ice Cream w. Pistachios & Dark Chocolate"))
