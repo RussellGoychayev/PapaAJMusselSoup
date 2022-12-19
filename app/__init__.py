@@ -28,7 +28,7 @@ c.execute("CREATE TABLE IF NOT EXISTS user_info (username TEXT, password TEXT, f
 # c.execute(f'UPDATE user_info SET friends = ? WHERE username = ?', ["john cena", session['username'][0]])
 
 # table for recipie leaderboard - stretch goal !!
-c.execute("CREATE TABLE IF NOT EXISTS foods(dish_name TEXT, likes INTEGER, comments TEXT);")
+c.execute("CREATE TABLE IF NOT EXISTS foods(dish_name TEXT, likes INTEGER);")
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -128,13 +128,13 @@ def register_helper():
 @app.route('/', methods = ['GET', 'POST'])
 def index():
 	print("username:")
-	print(session['username'][0])
+	#print(session['username'][0])
 	print("route:")
 	print("/")
 	print(session)
-
-	if session['username'][0] in session:
-		return redirect("/home")
+	if len(session) > 0:
+		if session['username'][0] in session:
+			return redirect("/home")
 	return redirect('/login')
 
 # This route is the home page. It will allow you to travel to the login, singup, leaderboards, friends,
@@ -331,7 +331,7 @@ def explorepage():
 
 @app.route('/leaderboard', methods = ['GET', 'POST'])
 def viewLeader(): 
-	return "a"
+	return render_template("leaderboard.html")
 
 # 	#render template here
 @app.route('/liked_recipes/<t>', methods= ['GET', 'POST'])
@@ -352,6 +352,22 @@ def like(t):
 	liked = c.fetchall()
 	print("liked after:")
 	print(liked)
+
+	c.execute("SELECT dish_name from foods")
+	foodarray = c.fetchall()
+	print("foods:")
+	print(foodarray)
+	for foodtuple in foodarray:
+		if t in foodtuple:
+			c.execute("SELECT likes from foods where dish_name = ?", [t])
+			likes = c.fetchall()[0]
+			c.execute("UPDATE foods set likes = ? where dish_name = ?",[likes+1, t] )
+		else:
+			c.execute("INSERT into foods values (?, ?)", [t, 1])
+
+	c.execute("SELECT * from foods")
+	print(c.fetchall())
+	#c.execute("CREATE TABLE IF NOT EXISTS foods(dish_name TEXT, likes INTEGER);")
 
 	#c.execute("CREATE TABLE IF NOT EXISTS foods(dish_name TEXT, likes INTEGER, comments TEXT);")
 	#give me the number of likes this dish has

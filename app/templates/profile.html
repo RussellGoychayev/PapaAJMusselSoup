@@ -48,6 +48,7 @@
           {% for recipe, url in liked %}  <!-- loop to display the search results-->
                 {{recipe}}
                 <a href="{{url}}" class="btn btn-primary" style="margin-left: 30px;" role="button">View recipe</a></button>
+                <a href="/liked_recipes/{{recipe}}" class="btn btn-primary" role="button">Like</a></button>
                 <br>
                 <br>
             {% endfor %}
