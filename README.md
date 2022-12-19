@@ -25,11 +25,9 @@ https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_FoodAPI.m
 ### TO DO LIST 
 1) finish finding replacement API and figuring out how to use it [DONE]
 2) finish setting up databases (user_info and the food one) and link to py [DONE]
-    - login info (user and password)
-    - favorites 
-    - friend requests 
-3) work out new features (profile and new APIs) 
-4) html templates
-5) CSS to make things pretty! 
-    - separate file from the HTML files
-6) stretch goals (leaderboard) 
+    - login info (user and password) [DONE]
+    - favorites [DONE]
+    - friend requests [DONE]
+3) work out new features (profile and new APIs) [DONE]
+4) html templates [WIP] 
+6) stretch goals (leaderboard) [WIP] 
