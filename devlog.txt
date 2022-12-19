@@ -172,3 +172,16 @@ MayQ -- 2022-12-18 13:00
 - made explore page prettier with cards
 --------------------------------------------------------------
 ==============================================================
+AnnaF, JamesY, RussellG, MayQ -- 2022-12-18 22:00
+--------------------------------------------------------------
+- addressed MANY errors 
+    - missing usernames 
+    - explore page  
+    - API limits (spoonacular)
+    - fixing try and catch methods to throw errors 
+    - following and follower lists 
+- HTML beautification 
+    - footers
+    - background music 
+- attempted work on leaderboard 
+--------------------------------------------------------------
