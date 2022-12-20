@@ -338,14 +338,16 @@ def explorepage():
 def viewLeader():
 	namelist = []
 	likelist = []
+	links = []
 	c.execute("SELECT * from foods")
 	for recipelikes in c.fetchall(): #tuple of (recipename, number of likes)
 		name = recipelikes[0] # name of recipe
+		links.append(get_url(name))
 		likes = recipelikes[1] # number of likes it has
 		namelist.append(name)
 		likelist.append(likes)
 
-	return render_template("leaderboard.html", info=zip(namelist, likelist))
+	return render_template("leaderboard.html", info=zip(namelist, likelist, links))
 
 # 	#render template here
 @app.route('/liked_recipes/<t>', methods= ['GET', 'POST'])
@@ -358,6 +360,7 @@ def like(t):
 	
 	#update this user's liked recipes
 	current = "" #string to append t to liked_recipes
+
 	for i in liked:
 		current = current + "".join(i) + " " #string of liked recipes separated by a space
 	c.execute("UPDATE user_info SET liked_recipes=? WHERE username=?", [current+t.replace(" ","_"), session['username'][0]]) #adds liked recipe to table, replace spaces with _
@@ -405,6 +408,69 @@ def like(t):
 	#test = c.fetchall()
 	db.commit()
 	return redirect("/home")
+
+@app.route('/liked_recipes_leaderboard/<t>', methods= ['GET', 'POST'])
+def likeleaderboard(t):
+	#give me all of this user's liked recipes
+	c.execute('SELECT liked_recipes FROM user_info WHERE username=?', [session['username'][0]])
+	liked = c.fetchall()
+	# print("liked before:")
+	print(liked)
+	
+	#update this user's liked recipes
+	current = "" #string to append t to liked_recipes
+	if len(liked) > 0: # checks if there is anything in food table 
+		for i in liked:
+			if i not in liked:
+				current = current + "".join(i) + " " #string of liked recipes separated by a space
+	c.execute("UPDATE user_info SET liked_recipes=? WHERE username=?", [current+t.replace(" ","_"), session['username'][0]]) #adds liked recipe to table, replace spaces with _
+
+	c.execute('SELECT liked_recipes FROM user_info WHERE username=?', [session['username'][0]])
+	liked = c.fetchall()
+	# print("liked after:")
+	print(liked)
+
+	c.execute("SELECT dish_name from foods")
+	foodarray = c.fetchall()
+	# print("foods:")
+	# print(foodarray)
+	if len(foodarray) > 0: # checks if there is anything in food table 
+		for foodtuple in foodarray:
+			if t in foodtuple: #dish is already liked
+				if t not in liked:
+					c.execute("SELECT likes from foods where dish_name = ?", [t])
+					likes = c.fetchall()[0]
+					print(likes)
+					c.execute("UPDATE foods set likes = ? where dish_name = ?",[likes[0]+1, t] )
+					db.commit()
+					return redirect("/leaderboard") #breaks loop so recipes aren't added multiple times
+				else:
+					return redirect("/leaderboard")
+			else: # new entry
+				c.execute("INSERT into foods values (?, ?)", [t, 1])
+				db.commit()
+				return redirect("/leaderboard")
+
+	else:
+		c.execute("INSERT into foods values (?, ?)", [t, 1])
+
+	c.execute("SELECT * from foods")
+	print(c.fetchall())
+	#c.execute("CREATE TABLE IF NOT EXISTS foods(dish_name TEXT, likes INTEGER);")
+
+	#c.execute("CREATE TABLE IF NOT EXISTS foods(dish_name TEXT, likes INTEGER, comments TEXT);")
+	#give me the number of likes this dish has
+	# c.execute('SELECT likes FROM foods WHERE dish_name=?', t)
+	# likes = c.fetchall()[0]
+	# print("LIKES HERE aiosudhaodihqwodiqhweoriqwheio/n" + likes)
+	#update the number of likes this dish has to be (previous + 1)
+	# c.execute('UPDATE foods SET liked=? WHERE dish_name=?', t)
+
+	
+	#c.execute('SELECT liked_recipes FROM user_info')
+	#test = c.fetchall()
+	db.commit()
+	return redirect("/leaderboard")
 
 @app.route('/search', methods = ['GET', 'POST'])
 def search():

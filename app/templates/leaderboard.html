@@ -42,6 +42,11 @@
     </div>
   </nav>
 
+<br>
+<h1 style="text-align: center;">Most Popular Recipes</h1>
+<br>
+
+
   <table class="table">
     <thead>
       <tr>
@@ -51,11 +56,13 @@
       </tr>
     </thead>
 <tbody>
-{% for name, likes in info %}  <!-- list of recipe name and likes-->
+{% for name, likes, url in info %}  <!-- list of recipe name and likes-->
   <tr>
     <th scope="row">{{loop.index}}</th>
-    <td>{{name}}</td>
-    <td>{{likes}}</td>
+    <td><a href="{{url}}">{{name}}</a></td>
+    <td>{{likes}}
+      <a style="margin-left: 20px;" href="/liked_recipes_leaderboard/{{name}}" class="btn btn-primary" role="button">Like</a></button>
+    </td>
   </tr>
 
 {% endfor %}
