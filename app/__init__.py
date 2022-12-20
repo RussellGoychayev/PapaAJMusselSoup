@@ -144,8 +144,8 @@ def index():
 def home():
 	try: 
 		c.execute("SELECT * from foods")
-		print("foods")
-		print(c.fetchall())
+		# print("foods")
+		# print(c.fetchall())
 
 		c.execute("SELECT * from user_info")
 		#print(c.fetchall())
@@ -339,15 +339,23 @@ def viewLeader():
 	namelist = []
 	likelist = []
 	links = []
+	alreadyliked = []
+	c.execute('SELECT liked_recipes FROM user_info WHERE username=?', [session['username'][0]])
+	liked = c.fetchall()
+	alreadyliked = liked[0][0].split(" ") # list of already liked recipes
+	for i in range(len(alreadyliked)): # replaces _ with spaces
+		alreadyliked[i] = alreadyliked[i].replace("_"," ")
+	# print(alreadyliked)
 	c.execute("SELECT * from foods")
 	for recipelikes in c.fetchall(): #tuple of (recipename, number of likes)
 		name = recipelikes[0] # name of recipe
-		links.append(get_url(name))
+		# links.append(get_url(name))
 		likes = recipelikes[1] # number of likes it has
 		namelist.append(name)
 		likelist.append(likes)
-
-	return render_template("leaderboard.html", info=zip(namelist, likelist, links))
+	
+	print(likelist)
+	return render_template("leaderboard.html", info=zip(namelist, likelist), alreadyliked=alreadyliked) # , links
 
 # 	#render template here
 @app.route('/liked_recipes/<t>', methods= ['GET', 'POST'])
@@ -415,20 +423,13 @@ def likeleaderboard(t):
 	c.execute('SELECT liked_recipes FROM user_info WHERE username=?', [session['username'][0]])
 	liked = c.fetchall()
 	# print("liked before:")
-	print(liked)
+	# print(liked)
 	
+	current = ""
 	#update this user's liked recipes
-	current = "" #string to append t to liked_recipes
-	if len(liked) > 0: # checks if there is anything in food table 
-		for i in liked:
-			if i not in liked:
-				current = current + "".join(i) + " " #string of liked recipes separated by a space
+	for i in liked:
+		current = current + "".join(i) + " " #string of liked recipes separated by a space
 	c.execute("UPDATE user_info SET liked_recipes=? WHERE username=?", [current+t.replace(" ","_"), session['username'][0]]) #adds liked recipe to table, replace spaces with _
-
-	c.execute('SELECT liked_recipes FROM user_info WHERE username=?', [session['username'][0]])
-	liked = c.fetchall()
-	# print("liked after:")
-	print(liked)
 
 	c.execute("SELECT dish_name from foods")
 	foodarray = c.fetchall()
