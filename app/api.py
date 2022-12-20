@@ -27,8 +27,8 @@ def get_url(name):
     url = f"https://api.spoonacular.com/recipes/complexSearch?query={name}&apiKey={k}" #url to get recipe id
     res = requests.get(url).json()
 
-    print("RECIPES API =================================================================================")
-    print(res)
+    # print("RECIPES API =================================================================================")
+    # print(res)
     recipes_api = res["results"]
     api_id = ""
     for i in recipes_api:

@@ -27,7 +27,8 @@ c.execute("CREATE TABLE IF NOT EXISTS user_info (username TEXT, password TEXT, f
 #give the user some friends for testing purposes
 # c.execute(f'UPDATE user_info SET friends = ? WHERE username = ?', ["john cena", session['username'][0]])
 
-# table for recipie leaderboard - stretch goal !!
+# table for recipe leaderboard - stretch goal !!
+#c.execute("DROP TABLE IF EXISTS foods")
 c.execute("CREATE TABLE IF NOT EXISTS foods(dish_name TEXT, likes INTEGER);")
 
 @app.route('/login', methods = ['GET', 'POST'])
@@ -142,6 +143,10 @@ def index():
 @app.route('/home', methods = ['GET', 'POST'])
 def home():
 	try: 
+		c.execute("SELECT * from foods")
+		print("foods")
+		print(c.fetchall())
+
 		c.execute("SELECT * from user_info")
 		#print(c.fetchall())
 		c.execute("SELECT liked_recipes from user_info WHERE username = ?", [session['username'][0]])
@@ -330,8 +335,17 @@ def explorepage():
 # 	#render template here
 
 @app.route('/leaderboard', methods = ['GET', 'POST'])
-def viewLeader(): 
-	return render_template("leaderboard.html")
+def viewLeader():
+	namelist = []
+	likelist = []
+	c.execute("SELECT * from foods")
+	for recipelikes in c.fetchall(): #tuple of (recipename, number of likes)
+		name = recipelikes[0] # name of recipe
+		likes = recipelikes[1] # number of likes it has
+		namelist.append(name)
+		likelist.append(likes)
+
+	return render_template("leaderboard.html", info=zip(namelist, likelist))
 
 # 	#render template here
 @app.route('/liked_recipes/<t>', methods= ['GET', 'POST'])
@@ -357,14 +371,22 @@ def like(t):
 	foodarray = c.fetchall()
 	# print("foods:")
 	# print(foodarray)
-	for foodtuple in foodarray:
-		if t in foodtuple:
-			c.execute("SELECT likes from foods where dish_name = ?", [t])
-			likes = c.fetchall()[0]
-			print(likes)
-			c.execute("UPDATE foods set likes = ? where dish_name = ?",[likes+1, t] )
-		else:
-			c.execute("INSERT into foods values (?, ?)", [t, 1])
+	if len(foodarray) > 0: # checks if there is anything in food table 
+		for foodtuple in foodarray:
+			if t in foodtuple: #dish is already liked
+				c.execute("SELECT likes from foods where dish_name = ?", [t])
+				likes = c.fetchall()[0]
+				print(likes)
+				c.execute("UPDATE foods set likes = ? where dish_name = ?",[likes[0]+1, t] )
+				db.commit()
+				return redirect("/home") #breaks loop so recipes aren't added multiple times
+			else: # new entry
+				c.execute("INSERT into foods values (?, ?)", [t, 1])
+				db.commit()
+				return redirect("/home")
+
+	else:
+		c.execute("INSERT into foods values (?, ?)", [t, 1])
 
 	c.execute("SELECT * from foods")
 	print(c.fetchall())
