@@ -56,13 +56,19 @@
       </tr>
     </thead>
 <tbody>
-{% for name, likes, url in info %}  <!-- list of recipe name and likes-->
+{% for name, likes in info %}  <!-- list of recipe name and likes-->
   <tr>
     <th scope="row">{{loop.index}}</th>
     <td><a href="{{url}}">{{name}}</a></td>
-    <td>{{likes}}
-      <a style="margin-left: 20px;" href="/liked_recipes_leaderboard/{{name}}" class="btn btn-primary" role="button">Like</a></button>
-    </td>
+    {% if name in alreadyliked %}
+      <td>{{likes}}
+        <a style="margin-left: 20px;" href="#" class="btn btn-primary disabled" role="button">Liked!</a></button> 
+      </td>
+    {% else %}
+      <td>{{likes}}
+        <a style="margin-left: 20px;" href="/liked_recipes_leaderboard/{{name}}" class="btn btn-primary" role="button">Like</a></button> 
+      </td>
+    {% endif %}
   </tr>
 
 {% endfor %}
