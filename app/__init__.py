@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, session, request, redirect 
 import sqlite3
 import requests
@@ -18,6 +17,8 @@ dataFrame.createSession
 DB_FILE="data.db"
 db = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
 c = db.cursor()
+play = False
+
 
 # c.execute("DROP TABLE IF EXISTS user_info")
 # table for all user information 
@@ -31,7 +32,7 @@ c.execute("CREATE TABLE IF NOT EXISTS user_info (username TEXT, password TEXT, f
 #c.execute("DROP TABLE IF EXISTS foods")
 c.execute("CREATE TABLE IF NOT EXISTS foods(dish_name TEXT, likes INTEGER);")
 
-@app.route('/login', methods = ['GET', 'POST'])
+@app.route('/login', methods = ['GET'])
 def login():
 	#url =  "https://api.edamam.com/api/recipes/v2"
 	#res = requests.get(url, params={'type':'public', 'app_id':"904296dd", 'app_key':"58228c816ae6f1c88cca02d85c4da325", 'q': 'chicken'})
@@ -128,11 +129,6 @@ def register_helper():
 # This route  is the index. It checks if user is in session. If yes, they are brought to home. If not, they are brought to login.
 @app.route('/', methods = ['GET', 'POST'])
 def index():
-	print("username:")
-	#print(session['username'][0])
-	print("route:")
-	print("/")
-	print(session)
 	if len(session) > 0:
 		if session['username'][0] in session:
 			return redirect("/home")
@@ -140,52 +136,49 @@ def index():
 
 # This route is the home page. It will allow you to travel to the login, singup, leaderboards, friends,
 # and other routes.
-@app.route('/home', methods = ['GET', 'POST'])
+@app.route('/home', methods = ['GET'])
 def home():
-	try: 
-		c.execute("SELECT * from foods")
-		# print("foods")
-		# print(c.fetchall())
+	# print(request.form)
+	# print("testing music functionality  -=-=-=-=-==--=-=-=-=-==--=-=-=-=-==--=-=-=-=-==--=-=-=-=-==-")
+	 #print("music_button" in request.POST)
+	#play_music = request.form['is_music']
+	following = []
+	followers = []
 
-		c.execute("SELECT * from user_info")
-		#print(c.fetchall())
+	try: 
 		c.execute("SELECT liked_recipes from user_info WHERE username = ?", [session['username'][0]])
-		recipes = ""
-		try:
-			recipes = "".join(c.fetchall()[0]) #string of recipes
-		except Exception as e:	
-			print(f'caught {type(e)}: e')
-			
-		#print(recipes)
+		recipes = "".join(c.fetchall()[0]) #string of recipes
 		spacedlist = []
 		urllist = [] 
 		if (" " in recipes):
 			likedlist = recipes.split() #list of all liked recipes
+			print('likedlist: -=-=-=-=-==--=-=-=-=-==--=-=-=-=-==--=-=-=-=-==--=-=-=-=-==')
 			print(likedlist)
-			for i in likedlist: #removes placeholder none and replaces _ with spaces
-				urllist.append(get_url(i.replace("_", " "))) #url of liked recipes
-				spacedlist.append(i.replace("_", " "))
 
-		#print(urllist)
+			for i in likedlist: #removes placeholder none and replaces _ with spaces
+				thing = get_url(i.replace("_", " "))
+				urllist.append(thing) #url of liked recipes )#PROBLEM HERE HELLO PROBLEM BAD NO BUENO
+				thing2 = i.replace('_', ' ')
+				print("NUMBA ONE AHHHHHHHHHHAHHHHHHHHHHAHHHHHHHHHHAHHHHHHHHHHAHHHHHHHHHHAHHHHHHHHHHAHHHHHHHHHHHH")
+				spacedlist.append(thing2)
+				print("I HERE AHHHHHHHHHHAHHHHHHHHHHAHHHHHHHHHHAHHHHHHHHHHAHHHHHHHHHHAHHHHHHHHHHAHHHHHHHHHH")
+				print(i)
+
+		print("NUMBA ONE AHHHHHHHHHHAHHHHHHHHHHAHHHHHHHHHHAHHHHHHHHHHAHHHHHHHHHHAHHHHHHHHHHAHHHHHHHHHHHH")
 		c.execute("SELECT following from user_info where username = ?", [session['username'][0]])
 		following = []
-		try:
-			following = "".join(c.fetchall()[0]).split()
-			print("FOllowing")
-		except Exception as e:	
-			print(f'caught {type(e)}: e')
+		following = "".join(c.fetchall()[0]).split()
+
 		c.execute("SELECT followers from user_info where username = ?", [session['username'][0]])
 		followers = []
-		try:
-			followers = "".join(c.fetchall()[0]).split()
-			print("Stern SUCKS")
-		except Exception as e:	
-			print(f'caught {type(e)}: e')
+		followers = "".join(c.fetchall()[0]).split()
 	
 	#give us info on our mistakes please ;,)
+	except UnboundLocalError as e:
+		print(e)
 	except Exception as e:	
 		print(f'caught {type(e)}: e')
-		return render_template('landing.html', error="An unexpected error has occurred")
+		return render_template('landing.html', error=e)
 	return render_template('landing.html', liked=zip(spacedlist, urllist), user=session['username'][0], following=following, followingcount=len(following), followers=followers, followercount=len(followers), likecount=len(spacedlist))
 	#render template here
 
@@ -320,41 +313,45 @@ def add(user):
 # 	#render template here
 
 #This is the explore page. Here you can browse recipies and like them.
-@app.route('/explore', methods = ['GET', 'POST'])
+@app.route('/explore', methods=['POST', 'GET'])
 def explorepage():
-	#try block because some recipes don't have images
-	try:       								
-		info = makeList(5)
+	#play_music = request.form['is_music']
+	info = makeList(5)
+	if isinstance(info, str):
+		return render_template('explore.html', error="Houston, we have a problem. I blame the API – see below for more details.", error_description=info)      							
+	else:
 		title = info[0]
 		image = info[1]
 		url = info[2]
 		summary = info[3]
 		return render_template('explore.html', i=zip(title, image, url, summary))
-	except:
-		return render_template('explore.html', error="An unexpected error has occurred")
-# 	#render template here
-
+#This route ???
 @app.route('/leaderboard', methods = ['GET', 'POST'])
 def viewLeader():
+	#make a bunch of lists
 	namelist = []
 	likelist = []
 	links = []
 	alreadyliked = []
+
+	#give me the recipies this user likes
 	c.execute('SELECT liked_recipes FROM user_info WHERE username=?', [session['username'][0]])
 	liked = c.fetchall()
-	alreadyliked = liked[0][0].split(" ") # list of already liked recipes
+
+	#if a user has already liked a post :
+	if len(liked) > 0:
+		alreadyliked = liked[0][0].split(" ")
+	
 	for i in range(len(alreadyliked)): # replaces _ with spaces
 		alreadyliked[i] = alreadyliked[i].replace("_"," ")
-	# print(alreadyliked)
+		
 	c.execute("SELECT * from foods")
 	for recipelikes in c.fetchall(): #tuple of (recipename, number of likes)
 		name = recipelikes[0] # name of recipe
-		# links.append(get_url(name))
 		likes = recipelikes[1] # number of likes it has
 		namelist.append(name)
 		likelist.append(likes)
 	
-	print(likelist)
 	return render_template("leaderboard.html", info=zip(namelist, likelist), alreadyliked=alreadyliked) # , links
 
 # 	#render template here
@@ -433,28 +430,41 @@ def likeleaderboard(t):
 	foodarray = c.fetchall()
 	# print("foods:")
 	# print(foodarray)
+	# print("food array length: ")
+	# print(len(foodarray))
 	if len(foodarray) > 0: # checks if there is anything in food table 
-		for foodtuple in foodarray:
-			if t in foodtuple: #dish is already liked
-				if t not in liked:
-					c.execute("SELECT likes from foods where dish_name = ?", [t])
-					likes = c.fetchall()[0]
-					print(likes)
-					c.execute("UPDATE foods set likes = ? where dish_name = ?",[likes[0]+1, t] )
-					db.commit()
-					return redirect("/leaderboard") #breaks loop so recipes aren't added multiple times
-				else:
-					return redirect("/leaderboard")
-			else: # new entry
-				c.execute("INSERT into foods values (?, ?)", [t, 1])
-				db.commit()
-				return redirect("/leaderboard")
+		c.execute("SELECT likes from foods where dish_name = ?", [t])
+		likes = c.fetchall()[0]
+		c.execute("UPDATE foods set likes = ? where dish_name = ?",[likes[0]+1, t] )
+		# for foodtuple in foodarray:
+		# 	print(foodtuple)
+			#print(foodarray[0])
+			#print(foodarray[1])
+			#print('Paneer Makhani' in foodarray)
+			# if t in foodtuple: #dish is already liked
+			# 	print("test:")
+			# 	#print("Charred Onion Dip w. Steamed Red Potatoes for Dipping" in foodtuple)
+			# 	if t not in liked:
+			# 		c.execute("SELECT likes from foods where dish_name = ?", [t])
+			# 		likes = c.fetchall()[0]
+			# 		#print(likes)
+			# 		c.execute("UPDATE foods set likes = ? where dish_name = ?",[likes[0]+1, t] )
+			# 		continue
+			# 		#db.commit()
+			# 		#return redirect("/leaderboard") #breaks loop so recipes aren't added multiple times
+			# 	# else:
+			# 	# 	return redirect("/leaderboard")
+			# else: # new entry
+			# 	c.execute("INSERT into foods values (?, ?)", [t, 1])
+			# 	continue
+				#db.commit()
+				#return redirect("/leaderboard")
 
 	else:
 		c.execute("INSERT into foods values (?, ?)", [t, 1])
 
 	c.execute("SELECT * from foods")
-	print(c.fetchall())
+	#print(c.fetchall())
 	#c.execute("CREATE TABLE IF NOT EXISTS foods(dish_name TEXT, likes INTEGER);")
 
 	#c.execute("CREATE TABLE IF NOT EXISTS foods(dish_name TEXT, likes INTEGER, comments TEXT);")

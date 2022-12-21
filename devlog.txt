@@ -213,10 +213,14 @@ AnnaF, JamesY,MayQ -- 2022-12-20 13:00
 - trying to fix leaderboard error
 --------------------------------------------------------------
 
-AnnaF, JamesY, RussellG, MayQ -- 2022-12-20 22:00
+AnnaF, JamesY, RussellG, MayQ -- 2022-12-21 00:25
 --------------------------------------------------------------
-- fixing api key error
+- more precise error catching (KeyError, etc)
+- fixing all the errors (hopefully)
     - profile page
+    - username 
+    - leaderboard duplication 
+    - local variable call 
 - leaderboard functionality 
     - like button 
 --------------------------------------------------------------

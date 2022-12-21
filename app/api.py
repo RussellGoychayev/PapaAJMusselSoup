@@ -28,7 +28,7 @@ def get_url(name):
     k = get_key('keys/key_spoonacular.txt')
     url = f"https://api.spoonacular.com/recipes/complexSearch?query={name}&apiKey={k}"
     results_list = requests.get(url).json()
-
+    recipe_url = ""
     #Try to get the results of our search.
     try:
         recipes_api = results_list["results"]
@@ -44,6 +44,7 @@ def get_url(name):
 
     #You reached the API call quota.
     except KeyError:
+        print("get_url(name) in api.py")
         print(results_list)
         recipe_url = results_list['message']
     return recipe_url
@@ -60,10 +61,10 @@ def search_recipe(query, l, u): #searches using query as a keyword and returns r
     
 # populate list with randomly generated urls [title, image, and sourceUrl]
 def makeList(i):
-    #Create a 2d array where each row is the information associated with a recipe.
-    recipe_titles, recipe_images, recipe_urls, recipe_summaries = []
-    info = [recipe_titles, recipe_images, recipe_urls, recipe_summaries]
-
+    recipe_titles = []
+    recipe_images = []
+    recipe_urls = []
+    recipe_summaries = []
     #Get the spoonacular API key
     k = get_key('keys/key_spoonacular.txt')
     for x in range(i):
@@ -74,11 +75,12 @@ def makeList(i):
             recipe_images.append(res['recipes'][0]['image'])
             recipe_urls.append(res['recipes'][0]['spoonacularSourceUrl'])
             recipe_summaries.append(res['recipes'][0]['summary'])
-        except KeyError:
-            print(res)
-            info.append(res)
+        #Catch KeyError and return the message
+        except KeyError as e:
+            print('makeList(i) in api.py')
+            info = res['message']
             return info
-
+    info = [recipe_titles, recipe_images, recipe_urls, recipe_summaries]
     return info
     
 def getLove(a, b):
