@@ -22,22 +22,30 @@ def get_photo(x):
     recipes_api_summary = res.json()['image']
     return recipes_api_summary
 
+#Given a search query, return a list of foods.
 def get_url(name):
+    #Give me the JSON thing associated with the search results produced by name
     k = get_key('keys/key_spoonacular.txt')
-    url = f"https://api.spoonacular.com/recipes/complexSearch?query={name}&apiKey={k}" #url to get recipe id
-    res = requests.get(url).json()
+    url = f"https://api.spoonacular.com/recipes/complexSearch?query={name}&apiKey={k}"
+    results_list = requests.get(url).json()
 
-    # print("RECIPES API =================================================================================")
-    # print(res)
-    recipes_api = res["results"]
-    api_id = ""
-    for i in recipes_api:
-        if name == i['title']:
-            api_id = i['id']
+    #Try to get the results of our search.
+    try:
+        recipes_api = results_list["results"]
+        for i in recipes_api:
+            if name == i['title']:
+                api_id = i['id']
 
-    url2 = f"https://api.spoonacular.com/recipes/{api_id}/information?apiKey={k}" #url to get recipe name from id
-    res2 = requests.get(url2)
-    recipe_url = res2.json()["spoonacularSourceUrl"]
+                #url to get recipe name from id
+                url2 = f"https://api.spoonacular.com/recipes/{api_id}/information?apiKey={k}"
+                res2 = requests.get(url2)
+                recipe_url = res2.json()["spoonacularSourceUrl"]
+                return recipe_url
+
+    #You reached the API call quota.
+    except KeyError:
+        print(results_list)
+        recipe_url = results_list['message']
     return recipe_url
 
 def search_recipe(query, l, u): #searches using query as a keyword and returns results l to u
@@ -52,26 +60,25 @@ def search_recipe(query, l, u): #searches using query as a keyword and returns r
     
 # populate list with randomly generated urls [title, image, and sourceUrl]
 def makeList(i):
-    recipeTitle = []
-    recipeImage = []
-    recipeUrl = []
-    recipeSummary = []
-    info = []
+    #Create a 2d array where each row is the information associated with a recipe.
+    recipe_titles, recipe_images, recipe_urls, recipe_summaries = []
+    info = [recipe_titles, recipe_images, recipe_urls, recipe_summaries]
+
+    #Get the spoonacular API key
     k = get_key('keys/key_spoonacular.txt')
     for x in range(i):
         url =  f"https://api.spoonacular.com/recipes/random?number=1&apiKey={k}"
-        res = requests.get(url)
-        recipeTitle.append(res.json()['recipes'][0]['title'])
-        recipeImage.append(res.json()['recipes'][0]['image'])
-        recipeUrl.append(res.json()['recipes'][0]['spoonacularSourceUrl'])
-        recipeSummary.append(res.json()['recipes'][0]['summary'])
-    #print (res.json()['title'])
-    #recipeImage.append(res.json()['image'])
-    #recipeUrl.append(res.json()['sourceUrl'])
-    info.append(recipeTitle)
-    info.append(recipeImage)
-    info.append(recipeUrl)
-    info.append(recipeSummary)
+        res = requests.get(url).json()
+        try:
+            recipe_titles.append(res['recipes'][0]['title'])
+            recipe_images.append(res['recipes'][0]['image'])
+            recipe_urls.append(res['recipes'][0]['spoonacularSourceUrl'])
+            recipe_summaries.append(res['recipes'][0]['summary'])
+        except KeyError:
+            print(res)
+            info.append(res)
+            return info
+
     return info
     
 def getLove(a, b):
@@ -84,8 +91,3 @@ def getLove(a, b):
     }
     response = requests.request("GET", url, headers=headers, params=querystring)
     return response.json()['percentage']
-
-#testing
-# print(getLove('Anna', 'May'))
-#print(makeList(5))
-# print(get_url("Cannoli Ice Cream w. Pistachios & Dark Chocolate"))

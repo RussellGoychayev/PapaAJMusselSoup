@@ -380,8 +380,6 @@ def like(t):
 
 	c.execute("SELECT dish_name from foods")
 	foodarray = c.fetchall()
-	# print("foods:")
-	# print(foodarray)
 	if len(foodarray) > 0: # checks if there is anything in food table 
 		for foodtuple in foodarray:
 			if t in foodtuple: #dish is already liked

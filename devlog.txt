@@ -196,6 +196,18 @@ JamesY -- 2022-12-19 22:32
 - finished the leaderboard
 --------------------------------------------------------------
 
+RussellG -- 2022-12-20 17:48
+--------------------------------------------------------------
+- added some comments
+- added exception handling to print more descriptive error messages
+--------------------------------------------------------------
+
+RussellG -- 2022-12-20 17:48
+--------------------------------------------------------------
+- added some comments
+- added exception handling to print more descriptive error messages
+--------------------------------------------------------------
+
 AnnaF, JamesY,MayQ -- 2022-12-20 13:00
 --------------------------------------------------------------
 - trying to fix leaderboard error
